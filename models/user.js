@@ -54,7 +54,7 @@ exports.create = function(name, username, password, password2) {
                     },
                     "wishlist": [],
                     "visited": [],
-                    "following": [], // User is following them {userid}
+                    "following": [], // {userid}
                     "visited": [] // {id, name, time}
                 };
                 return Q.ninvoke(users, "insert", user);
