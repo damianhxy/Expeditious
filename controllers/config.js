@@ -43,7 +43,7 @@ module.exports = function(app, express) {
             return user.authenticate(username, password)
             .then(function(user) {
                 console.info("Signed in " + user.username);
-                req.session.success = "Welcome back, " + user.username + ".";
+                // req.session.success = "Welcome back, " + user.username + ".";
                 done(null, user);
             })
             .fail(function(err) {
@@ -60,7 +60,7 @@ module.exports = function(app, express) {
             return user.create(req.body.name, username, password)
             .then(function(user) {
                 console.info("Signed up " + user.username);
-                req.session.success = "Welcome, " + user.username + ".";
+                // req.session.success = "Welcome, " + user.username + ".";
                 done(null, user);
             })
             .fail(function(err) {
