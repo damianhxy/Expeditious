@@ -31,6 +31,20 @@ header span{
 	font-weight: 700;
 }
 
+.button{
+	position: absolute;
+	top: 1em;
+	color: inherit;
+}
+
+.button.left{
+	left: 1em;
+}
+
+.button.right{
+	right: 1em;
+}
+
 .cardbox{
 	min-height: 100%;
 	padding: 3.5em 0 0.5em 0;
@@ -198,4 +212,4 @@ header span{
 
 .card .name{
 	color: rgba(231, 76, 60, 1.0);
-}s
+}

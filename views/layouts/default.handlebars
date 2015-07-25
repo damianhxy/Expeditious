@@ -16,7 +16,13 @@
 </head>
 <body>
 	<header>
-		<span>{{title}}</span>
+		<a href="#" class="button left"><i class="fa fa-arrow-left"></i></a>
+		<span>EXPEDITIO</span>
+		{{#if user}}
+			<a href="/user/{{user.name}}" class="button right"><i class="fa fa-user"></i></a>
+		{{/else}}
+			<a href="/login" class="button right"><i class="fa fa-sign-in"></i></a>
+		{{/if}}
 	</header>
 	<div class="cardbox">
 		{{{body}}}
