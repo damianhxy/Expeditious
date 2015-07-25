@@ -46,8 +46,12 @@ exports.create = function(name, username, password) {
                     "name": name,
                     "username": username,
                     "hash": hash,
-                    "salt": salt
-                    /*preferences*/
+                    "salt": salt,
+                    "preferences": {
+                        "radius": 500,
+                        "wishlist": [],
+                        "visited": []
+                    }
                 };
                 return Q.ninvoke(users, "insert", user);
             });
