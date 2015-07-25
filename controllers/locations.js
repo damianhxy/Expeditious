@@ -16,4 +16,15 @@ router.get("/:id", function(req, res, next) {
     });
 });
 
+router.post("/nearby", function(req, res, next) {
+    location.findNearby(req.params.lat, req.params.long, req.user.preferences.radius)
+    .then(function(response) {
+        res.send(response);
+    })
+    .fail(function(err) {
+        console.error(err);
+        next(err);
+    });
+})
+
 module.exports = router;

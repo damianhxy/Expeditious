@@ -49,7 +49,7 @@ exports.create = function(name, username, password, password2) {
                     "hash": hash,
                     "salt": salt,
                     "preferences": {
-                        "radius": 500
+                        "radius": 500 // metres
                     },
                     "wishlist": [],
                     "following": [], // {userid}
