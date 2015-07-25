@@ -1,0 +1,53 @@
+<div class="card name">
+	<div class="img" style="background-image: url('{{location.image}}')"></div>
+	<div class="stamp">{{#visited location.name}}</div>
+	<h1>{{location.name}}</h1>
+	{{#category location.category}}
+	{{#if location.address}}
+		<p class="subinfo"><i class="fa fa-map-marker"></i> {{location.address}}</p>
+	{{/if}}
+	{{#if location.hours}}
+		<p class="subinfo"><i class="fa fa-clock-o"></i> {{location.hours}}</p>
+	{{/if}}
+</div>
+{{#if location.info}}
+<div class="card info">
+	<section class="icon up">
+		<i class="fa fa-info-circle"></i>
+	</section>
+	<section class="main">
+		<p class="content">{{location.info.text}}</p>
+		<p class="source">{{location.info.source}}</p>
+	</section>
+</div>
+{{/if}}
+{{#if location.parking}}
+<div class="card parking">
+	<section class="icon">
+		<i class="fa fa-car"></i>
+	</section>
+	<section class="main">
+		<section class="left">
+			<p>Parking Lots</p>
+		</section>
+		<section class="right">
+			<p>{{location.parking}}</p>
+		</section>
+	</section>
+</div>
+{{/if}}
+{{#if publictraveltime}}
+<div class="card travel">
+	<section class="icon">
+		<i class="fa fa-clock-o"></i>
+	</section>
+	<section class="main">
+		<section class="left">
+			<p>Travel Time</p>
+		</section>
+		<section class="right">
+			<p>{{publictraveltime}}</p>
+		</section>
+	</section>
+</div>
+{{/if}}
