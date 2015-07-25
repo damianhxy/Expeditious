@@ -83,6 +83,10 @@ exports.generateLeaderboard = function(id) {
                     username: followers[follower].username,
                     visited: followers[follower].visited.length
                 });
+            leaderboard.push({
+                username: user.username,
+                visited: user.visited.length
+            });
             leaderboard.sort(function(a, b) {
                 return b.visited - a.visited; // Higher comes first
             });

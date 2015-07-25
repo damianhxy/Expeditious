@@ -15,6 +15,19 @@ router.get("/signup", function(req, res, next) {
     });
 });
 
+router.get("/leaderboard", function(req, res, next) {
+    user.generateLeaderboard(req.user._id)
+    .then(function(res) {
+        res.render("leaderboard", {
+            title: "LEADERBOARD",
+            stats: res
+        });
+    })
+    .fail(function(err) {
+        console.error(err);
+        next(err);
+    });
+});
 
 router.get("/logout", auth, function(req, res, next) {
     req.session.success = "Successfully signed out.";
