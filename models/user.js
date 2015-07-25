@@ -33,8 +33,9 @@ exports.authenticate = function(username, password) {
     });
 };
 
-exports.create = function(name, username, password) {
+exports.create = function(name, username, password, password2) {
     return Q.promise(function(resolve, reject, notify) {
+        if (password !== password2) return reject(Error("Password mistmatch."));
         Q.ninvoke(users, "findOne", { username: username })
         .then(function(user) {
             if (user) return reject(Error("User already exists."));
@@ -53,9 +54,8 @@ exports.create = function(name, username, password) {
                     },
                     "wishlist": [],
                     "visited": [],
-                    "following": [], // User is following them {userid, username, score}
-                    "followers": [], // User is being followed {userid}
-                    "visited": [] // name, time
+                    "following": [], // User is following them {userid}
+                    "visited": [] // {id, name, time}
                 };
                 return Q.ninvoke(users, "insert", user);
             });
@@ -71,12 +71,33 @@ exports.create = function(name, username, password) {
 
 exports.generateLeaderboard = function(id) {
     return Q.promise(function(resolve, reject, notify) {
+        var leaderboard = [];
         Q.ninvoke(users, "findOne", { _id: id })
         .then(function(user) {
-
+            var followers = [];
+            for (var follower in user.following)
+                followers.push(get(user.following[follower]));
+            return Q.all(followers);
+        })
+        .then(function(followers) {
+            for (var follower in followers)
+                leaderboard.push({
+                    username: followers[follower].username,
+                    visited: followers[follower].visited.length
+                });
+            leaderboard.sort(function(a, b) {
+                return b.visited - a.visited; // Higher comes first
+            });
+            leaderboard.map(function(e, i, a) {
+                if (!i) e.rank = 1;
+                else e.rank = a[i - 1].rank + (e.visited != a[i - 1].visited);
+            });
+        })
+        .then(function() {
+            resolve(leaderboard);
         })
         .fail(function(err) {
-
+            reject(err);
         });
     });
 };
@@ -97,33 +118,12 @@ exports.toggleFollow = function(userid, targetid) {
     return Q.promise(function(resolve, reject, notify) {
         Q.ninvoke(users, "findOne", { _id: userid })
         .then(function(user) {
-            var location = -1;
-            for (var followee in user)
-                if (user[followee].id === targetid)
-                    location = followee;
+            var location = user.following.indexOf(targetid);
             if (~ location)
                 users.following.splice(location, 1);
             else
-                get(targetid)
-                .then(function(target) {
-                    user.following.push({
-                        username: target.username,
-                        userid: targetid,
-                        score: target.visited.length
-                    });
-                    return Q.ninvoke(users, "update", { _id: userid }, { $set: user });
-                });
-        })
-        .then(function() {
-            return Q.ninvoke(users, "findOne", { _id: targetid });
-        })
-        .then(function(target) {
-            var location = user.followers.indexOf(userid);
-            if (~ location)
-                user.followers.push(userid);
-            else
-                user.following.splice(userid, 1);
-            return Q.ninvoke(users, "update", { _id: targetid }, { $set: target });
+                users.following.push(userid);
+            return Q.ninvoke(users, "update", { _id: userid }, { $set: user });
         })
         .then(function() {
             resolve();
@@ -138,17 +138,21 @@ exports.addVisited = function(userid, locationid, time) {
     return Q.promise(function(resolve, reject, notify) {
         Q.ninvoke(users, "findOne", { _id: userid })
         .then(function(user) {
+            for (var entry in user.visited)
+                if (user.visited[entry].id === locationid)
+                    return reject(Error("Illegal attempt to revisit place"));
             location.get(locationid)
             .then(function(location) {
-                for (var history in user.visited)
-                    if (user.visited[history].name === location.name)
-                        return reject(Error("Illegal: User attempted to visit location again."));
                 user.visited.push({
+                    id: locationid,
                     name: location.name,
                     time: time
                 });
-                return Q.ninvoke(users, "update", { _id: userid }, { $set: user });
-            });
+                return Q.ninvoke(users, "update", { _id: userid }, { $set: users });
+            })
+        })
+        .then(function() {
+            resolve();
         })
         .fail(function(err) {
             reject(err);
