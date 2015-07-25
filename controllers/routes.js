@@ -10,7 +10,7 @@ router.use("/location", require("./locations.js"));
 
 router.get("/", function(req, res, next) {
     res.render("home", {
-        title: "Home",
+        title: "EXPEDITIO",
         user: req.user
     });
 });

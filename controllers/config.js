@@ -59,7 +59,7 @@ module.exports = function(app, express) {
     passport.use("local-signup", new localStrategy(
         { passReqToCallback: true },
         function(req, username, password, done) {
-            return user.create(req.body.name, username, password)
+            return user.create(req.body.name, username, password, req.body.password2)
             .then(function(user) {
                 console.info("Signed up " + user.username);
                 // req.session.success = "Welcome, " + user.username + ".";
