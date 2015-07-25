@@ -2,7 +2,12 @@
 	font-family: 'Roboto', sans-serif;
 	box-sizing: border-box;
 }
-
+::-moz-selection {
+    background: rgba(0,0,0,0.3);
+}
+::selection {
+    background: rgba(0,0,0,0.3);
+}
 html, body{
 	margin: 0;
 	height: 100%;
@@ -232,18 +237,24 @@ header span{
 	width: calc(100% - 2.3em);
 	font-size: 1em;
 	background: rgba(0,0,0,0);
-	display: inline-block;
-	padding: 1em;
 	border: 0px;
+	padding: 1em;
 }
 
 .card.search button{
 	width: 2em;
 	font-size: 1em;
-	padding: 1em 0;
 	background: rgba(0,0,0,0);
 	border: 0px;
+	text-align: center;
+	padding: 1em 0;
 	cursor: pointer;
+}
+
+.link{
+  text-align:center;
+  background-color: rgba(192, 57, 43, 1.0);
+  color: #eee;
 }
 
 .activitytitle{

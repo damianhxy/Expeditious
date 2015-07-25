@@ -19,7 +19,11 @@ router.get("/search", function(req, res, next) {
 router.post("/search", function(req, res, next) {
 	location.search(req.body.search)
 	.then(function(response) {
-		res.send(response);
+		res.render("search", {
+			title: "SEARCH",
+			user: req.user,
+			response: response
+		});
 	})
 	.fail(function(err) {
 		console.error(err);

@@ -7,6 +7,7 @@ var settings = require("./settings.js");
 var session = require("express-session");
 var exphbs = require("express-handlebars");
 var localStrategy = require("passport-local");
+var location = require("../models/location.js");
 
 module.exports = function(app, express) {
     var hbs = exphbs.create({
@@ -17,6 +18,70 @@ module.exports = function(app, express) {
 			},
 			length: function(arr) {
 				return arr.length;
+			},
+			types: function(arr) {
+				var a = 0, d;
+				for(; a < arr.length && ! ~ location.types.indexOf(arr[a]); a++);
+				switch(arr[a]) {
+					case "airport":
+						d = "plane";
+						break;
+					case "amusement_park":
+						d = "space-shuttle";
+						break;
+					case "aquarium":
+						d = "anchor";
+						break;
+					case "art_gallery":
+						d = "image";
+						break;
+					case "casino":
+						d = "money";
+						break;
+					case "hospital":
+						d = "plus";
+						break;
+					case "library":
+						d = "book";
+						break;
+					case "museum":
+						d = "insititution";
+						break;
+					case "park":
+						d = "tree";
+						break;
+					case "shopping_mall":
+						d = "building";
+						break;
+					case "stadium":
+						d = "soccer-ball-o";
+						break;
+					case "university":
+						d = "academic-cap";
+						break;
+					case "zoo":
+						d = "paw";
+						break;
+					case "church":
+					case "mosque":
+					case "hindu_temple":
+					case "synagogue":
+						d = "group";
+						break;
+				}
+				return d;
+			},
+			typename: function(arr) {
+				var a = 0, d;
+				for(; a < arr.length && ! ~ location.types.indexOf(arr[a]); a++);
+				d = arr[a];
+				d.replace("_"," ");
+				//titlecase
+				d.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+				return d;
+			},
+			list: function(arr) {
+				return arr.join(',');
 			}
         }
     });

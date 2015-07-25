@@ -1,6 +1,6 @@
 var Q = require("q");
 var nedb = require("nedb");
-var http = require("http");
+var https = require("https");
 var settings = require("../controllers/settings.js");
 var users = require("./user.js");
 /*
@@ -9,18 +9,21 @@ var users = require("./user.js");
     latitude: float
     longtitude: float
 */
-var placesTypes = [
+var placesTypes = exports.types = [
     "airport",
     "amusement_park",
     "aquarium",
     "art_gallery",
     "casino",
     "church",
+	"hindu_temple",
     "hospital",
     "library",
     "mosque",
+	"museum",
 	"park",
     "shopping_mall",
+	"stadium",
     "synagogue",
     "university",
     "zoo"
@@ -37,7 +40,7 @@ function getRequest(options) {
                 resolve(response);
             });
         }
-        http.request(options, callback).end();
+        https.request(options, callback).end();
     });
 }
 
@@ -129,18 +132,21 @@ exports.markVisited = function(lat, long, userid) {
 exports.search = function(str) {
 	return Q.promise(function(resolve, reject, notify) {
 		var host = "maps.googleapis.com";
-        var path = "/maps/api/place/autocomplete/json?";
-		path += "key=" + settings.API_KEY;
-		path += "&input=" + str;
-		getRequest({
-			host: host,
-			path: path
-		})
-		.then(function(res) {
-			resolve(JSON.parse(res));
-		})
-		.fail(function(err) {
-			reject(err);
-		})
+        var path = "/maps/api/place/nearbysearch/json?";
+        path += "key=" + settings.API_KEY;
+        path += "&location=" + 1.19 + "," + 103.805;
+        path += "&radius=" + 25000;
+        path += "&types=" + placesTypes.join("|");
+		path += "&name="  + str;
+        getRequest({
+            host: host,
+            path: path
+        })
+        .then(function(res) {
+            resolve(JSON.parse(res));
+        })
+        .fail(function(err) {
+            reject(err);
+        });
 	});		
 };

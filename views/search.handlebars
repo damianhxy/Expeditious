@@ -5,62 +5,35 @@
 	</div>
 </form>
 
-<div class="card">
-	<section class="icon">
-		<i class="fa fa-building"></i>
-	</section>
-	<section class="main">
-		<p>Suntec City</p>
-	</section>
-</div>
+
 
 {{#if response}}
-{{#each response.predictions}}
+{{#each response.results}}
+<a href="/locations/{{this.place_id}}">
 <div class="card">
-
+	<section class="icon">
+		<i class="fa fa-{{types this.types}}"></i>
+	</section>
+	<section class="main">
+		<p>{{this.name}}</p>
+	</section>
 </div>
+</a>
 {{/each}}
 {{else}}
 <div class="card">
-    <p class="title">Nearby Locations</p>
-    <section class="place">
+    <p class="title">Hot Locations</p>
+    {{#each hot}}
+	<a href="/locations/{{this.place_id}}">
+	<section class="place">
         <section class="icon">
-            <i class="fa fa-building"></i>
+            <i class="fa fa-{{types this.types}}"></i>
         </section>
         <section class="main">
-            <section class="left">
-                <p>Suntec City</p>
-            </section>
-            <section class="right">
-                <p>50m</p>
-            </section>
+			<p>{{this.description}}</p>
         </section>
     </section>
-    <section class="place">
-        <section class="icon">
-            <i class="fa fa-building"></i>
-        </section>
-        <section class="main">
-            <section class="left">
-                <p>Suntec City</p>
-            </section>
-            <section class="right">
-                <p>50m</p>
-            </section>
-        </section>
-    </section>
-    <section class="place">
-        <section class="icon">
-            <i class="fa fa-building"></i>
-        </section>
-        <section class="main">
-            <section class="left">
-                <p>Suntec City</p>
-            </section>
-            <section class="right">
-                <p>50m</p>
-            </section>
-        </section>
-    </section>
+	</a>
+	{{/each}}
 </div>
 {{/if}}

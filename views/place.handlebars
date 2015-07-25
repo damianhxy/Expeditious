@@ -2,9 +2,9 @@
 	<div class="img" style="background-image: url('{{location.image}}')"></div>
 	{{#visited location.name}}
 	<h1>{{location.name}}</h1>
-	{{#category location.category}}
+	<p class="subinfo"><i class="fa fa-{{type location.types}}"></i> {{typename types}}</p>
 	{{#if location.address}}
-		<p class="subinfo"><i class="fa fa-map-marker"></i> {{location.address}}</p>
+	<p class="subinfo"><i class="fa fa-map-marker"></i> {{location.address}}</p>
 	{{/if}}
 	{{#if location.hours}}
 		<p class="subinfo"><i class="fa fa-clock-o"></i> {{location.hours}}</p>
