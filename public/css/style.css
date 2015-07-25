@@ -185,7 +185,10 @@ header span{
 
 .card.map{
 	background: rgba(46, 204, 113, 1.0);
-	min-height: 10em;
+	text-align: center;
+	line-height: 10em;
+	color: #eee;
+	transition: 0.3s;
 }
 
 .card .place{
@@ -216,4 +219,12 @@ header span{
 
 .card .name{
 	color: rgba(231, 76, 60, 1.0);
+}
+
+.activitytitle{
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 700;
+	font-size: 1.3em;
+	text-align: center;
+	color: #999;
 }
