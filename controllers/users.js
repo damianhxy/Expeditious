@@ -1,6 +1,7 @@
 var express = require("express");
 var passport = require("passport");
 var router = express.Router();
+var auth = require("../middlewares/auth.js");
 
 router.get("/logout", auth, function(req, res, next) {
     req.session.success = "Successfully signed out.";

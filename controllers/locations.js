@@ -2,6 +2,8 @@ var express = require("express");
 var passport = require("passport");
 var router = express.Router();
 
-/* Get Card Info, etc. */
+router.get("/:id", function(req, res, next) {
+
+});
 
 module.exports = router;
