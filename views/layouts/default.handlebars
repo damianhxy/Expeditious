@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
-	<title>Road Trip</title>
+	<title>Expeditio</title>
 	<link rel="author" type="text/plain" href="/humans.txt">
 	<!--link rel="icon" href="/media/favicon.ico" type="image/ico">
 	<link rel="apple-touch-icon" href="/media/favicon.png" type="image/png"-->
@@ -17,11 +17,11 @@
 </head>
 <body>
 	<header>
-		<a href="#" class="button left"><i class="fa fa-arrow-left"></i></a>
+		<a href="/" class="button left"><i class="fa fa-home"></i></a>
 		<span>EXPEDITIO</span>
 		<a href="/search" class="button search"><i class="fa fa-search"></i></a>
 		{{#if user}}
-			<a href="/user/{{user.name}}" class="button right"><i class="fa fa-user"></i></a>
+			<a href="/users/{{user._id}}" class="button right"><i class="fa fa-user"></i></a>
 		{{else}}
 			<a href="/users/login" class="button right"><i class="fa fa-sign-in"></i></a>
 		{{/if}}

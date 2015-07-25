@@ -3,6 +3,8 @@ var passport = require("passport");
 var router = express.Router();
 var auth = require("../middlewares/auth.js");
 var user = require("../models/user.js");
+var settings = require("../controllers/settings.js");
+var moment = require("moment");
 var Q = require("q");
 
 router.post("/activity", function(req, res, next) {
@@ -19,18 +21,28 @@ router.post("/activity", function(req, res, next) {
             for (var visit in followers[follower].visited)
                 activities.push(followers[follower].visited[visit]);
         }
+		activities.sort(function(a, b) { // Latest comes first
+			return b.time - a.time;
+		});
         res.send(activities);
     })
     .fail(function(err) {
         console.error(err.stack);
         next(err);
     });
-})
+});
 
 router.get("/login", function(req, res, next) {
     res.render("login", {
         title: "LOGIN"
     });
+});
+
+router.get("/profile", function(req, res, next) {
+      res.render({
+          title: "PROFILE",
+		  user: req.user
+      }) ;
 });
 
 router.get("/signup", function(req, res, next) {
@@ -79,6 +91,32 @@ router.post("/signup", function(req, res, next) {
             res.redirect("/");
         });
     })(req, res, next);
+});
+
+router.get("/:id", function(req, res, next) {
+	user.get(req.params.id)
+	.then(function(user) {
+		var now = Date.now();
+		user.joined = moment(user.joined).format(settings.MOMENTJS_JOINED_FORMAT);
+		user.visited.filter(function(e) {
+			return now - e.time <= 86400000;
+		});
+		user.visited.forEach(function(e) {
+			e = moment(e).format(settings.MOMENTJS_ACTIVITY_FORMAT);
+		});
+		user.visited.sort(function(a, b) { // Greater comes first
+			return b.time - a.time;
+		});
+		res.render("profile", {
+			title: "PROFILE",
+			user: req.user,
+			profile: user
+		});		
+	})
+	.fail(function(err) {
+		console.error(err);
+		next(err);
+	});
 });
 
 module.exports = router;

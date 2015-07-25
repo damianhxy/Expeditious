@@ -21,6 +21,7 @@
     "express": "^4.13.1",
     "express-handlebars": "^2.0.1",
     "express-session": "^1.11.3",
+    "moment": "^2.10.3",
     "morgan": "^1.6.1",
     "nedb": "^1.1.2",
     "passport": "^0.2.2",

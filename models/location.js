@@ -2,6 +2,7 @@ var Q = require("q");
 var nedb = require("nedb");
 var http = require("http");
 var settings = require("../controllers/settings.js");
+var users = require("./user.js");
 /*
     Carparks (HDB)
     name: name
@@ -18,6 +19,7 @@ var placesTypes = [
     "hospital",
     "library",
     "mosque",
+	"park",
     "shopping_mall",
     "synagogue",
     "university",
@@ -65,7 +67,7 @@ exports.busCost = function(startLat, startLong, endLat, endLong) {
     });
 };
 
-exports.findNearby = function(lat, long, radius) {
+var nearby = exports.findNearby = function(lat, long, radius) {
     return Q.promise(function(resolve, reject, notify) {
         var host = "maps.googleapis.com";
         var path = "/maps/api/place/nearbysearch/json?";
@@ -103,4 +105,42 @@ exports.getPlace = function(id) {
             reject(err);
         });
     });
+};
+
+exports.markVisited = function(lat, long, userid) {
+	return Q.promise(function(reject, resolve, notify) {
+		nearby(lat, long, 50)
+		.then(function(res) {
+			var now = Date.now();
+			var locations = [];
+			for (var location in res.results)
+				locations.push(user.addVisited(userid, res.results[location].place_id,now));
+			return Q.all(locations);
+		})
+		.then(function() {
+			resolve();
+		})
+		.fail(function(err) {
+			reject(err);
+		});
+	});
+};
+
+exports.search = function(str) {
+	return Q.promise(function(resolve, reject, notify) {
+		var host = "maps.googleapis.com";
+        var path = "/maps/api/place/autocomplete/json?";
+		path += "key=" + settings.API_KEY;
+		path += "&input=" + str;
+		getRequest({
+			host: host,
+			path: path
+		})
+		.then(function(res) {
+			resolve(JSON.parse(res));
+		})
+		.fail(function(err) {
+			reject(err);
+		})
+	});		
 };

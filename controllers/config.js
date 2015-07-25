@@ -14,6 +14,9 @@ module.exports = function(app, express) {
         helpers: {
             visited: function(identify) {
 				//stub
+			},
+			length: function(arr) {
+				return arr.length;
 			}
         }
     });

@@ -1,0 +1,66 @@
+<form action="/search" method="POST">
+    <div class="card search">
+        <input type="text" placeholder="Search" class="text" name="search">
+    	<button type="submit"><i class="fa fa-search"></i></button>
+	</div>
+</form>
+
+<div class="card">
+	<section class="icon">
+		<i class="fa fa-building"></i>
+	</section>
+	<section class="main">
+		<p>Suntec City</p>
+	</section>
+</div>
+
+{{#if response}}
+{{#each response.predictions}}
+<div class="card">
+
+</div>
+{{/each}}
+{{else}}
+<div class="card">
+    <p class="title">Nearby Locations</p>
+    <section class="place">
+        <section class="icon">
+            <i class="fa fa-building"></i>
+        </section>
+        <section class="main">
+            <section class="left">
+                <p>Suntec City</p>
+            </section>
+            <section class="right">
+                <p>50m</p>
+            </section>
+        </section>
+    </section>
+    <section class="place">
+        <section class="icon">
+            <i class="fa fa-building"></i>
+        </section>
+        <section class="main">
+            <section class="left">
+                <p>Suntec City</p>
+            </section>
+            <section class="right">
+                <p>50m</p>
+            </section>
+        </section>
+    </section>
+    <section class="place">
+        <section class="icon">
+            <i class="fa fa-building"></i>
+        </section>
+        <section class="main">
+            <section class="left">
+                <p>Suntec City</p>
+            </section>
+            <section class="right">
+                <p>50m</p>
+            </section>
+        </section>
+    </section>
+</div>
+{{/if}}

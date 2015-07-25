@@ -53,7 +53,8 @@ exports.create = function(name, username, password, password2) {
                     },
                     "wishlist": [],
                     "following": [], // {userid}
-                    "visited": [] // {id, name, time}
+                    "visited": [], // {id, name, time}
+					"joined": Date.now()
                 };
                 return Q.ninvoke(users, "insert", user);
             });
@@ -142,7 +143,7 @@ exports.addVisited = function(userid, locationid, time) {
         .then(function(user) {
             for (var entry in user.visited)
                 if (user.visited[entry].id === locationid)
-                    return reject(Error("Illegal attempt to revisit place"));
+                    return resolve(); // Already marked
             location.get(locationid)
             .then(function(location) {
                 user.visited.push({
