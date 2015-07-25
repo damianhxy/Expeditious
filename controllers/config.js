@@ -12,7 +12,9 @@ module.exports = function(app, express) {
     var hbs = exphbs.create({
         defaultLayout: "default",
         helpers: {
-            /* None Yet */
+            visited: function(identify) {
+				//stub
+			}
         }
     });
 

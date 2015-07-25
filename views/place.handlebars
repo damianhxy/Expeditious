@@ -1,6 +1,6 @@
 <div class="card name">
 	<div class="img" style="background-image: url('{{location.image}}')"></div>
-	<div class="stamp">{{#visited location.name}}</div>
+	{{#visited location.name}}
 	<h1>{{location.name}}</h1>
 	{{#category location.category}}
 	{{#if location.address}}
