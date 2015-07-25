@@ -2,7 +2,6 @@ var Q = require("q");
 var nedb = require("nedb");
 var bcryptjs = require("bcryptjs");
 var users = new nedb({filename: "./database/users", autoload: true});
-var locations = require("./location.js");
 
 exports.all = function() {
     return Q.promise(function(resolve, reject, notify) {
@@ -35,11 +34,11 @@ exports.authenticate = function(username, password) {
 
 exports.create = function(name, username, password, password2) {
     return Q.promise(function(resolve, reject, notify) {
-        if (password !== password2) return reject(Error("Password mistmatch."));
+        if (password !== password2) return reject(Error("Password mismatch."));
         Q.ninvoke(users, "findOne", { username: username })
         .then(function(user) {
             if (user) return reject(Error("User already exists."));
-            return Q.nfcall(bcryptjs.gensalt, 10);
+            return Q.nfcall(bcryptjs.genSalt, 10);
         })
         .then(function(salt) {
             return Q.nfcall(bcryptjs.hash, password, salt)
@@ -53,7 +52,6 @@ exports.create = function(name, username, password, password2) {
                         "radius": 500
                     },
                     "wishlist": [],
-                    "visited": [],
                     "following": [], // {userid}
                     "visited": [] // {id, name, time}
                 };
@@ -149,7 +147,7 @@ exports.addVisited = function(userid, locationid, time) {
                     time: time
                 });
                 return Q.ninvoke(users, "update", { _id: userid }, { $set: users });
-            })
+            });
         })
         .then(function() {
             resolve();

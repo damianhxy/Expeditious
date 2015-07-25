@@ -2,7 +2,6 @@ var Q = require("q");
 var nedb = require("nedb");
 var http = require("http");
 var settings = require("../controllers/settings.js");
-var carpark = new nedb({filename: "./database/carpark", autoload: true})
 // image
 // description
 /*
