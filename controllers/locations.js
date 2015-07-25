@@ -3,6 +3,10 @@ var passport = require("passport");
 var router = express.Router();
 var location = require("../models/location.js");
 
+router.get("/carpark/:id", function(req, res, next) {
+
+});
+
 router.get("/:id", function(req, res, next) {
     location.getPlace(req.params.id)
     .then(function(response) {
@@ -25,6 +29,10 @@ router.post("/nearby", function(req, res, next) {
         console.error(err);
         next(err);
     });
-})
+});
+
+router.post("/nearbyCarparks", function(req, res, next) {
+
+});
 
 module.exports = router;
