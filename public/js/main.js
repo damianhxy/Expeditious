@@ -1,5 +1,5 @@
 window.onload = function() {
-	
+
 	var d = document.querySelector(".card.map");
 	if(d) d.style.minHeight = d.offsetWidth*0.66 + "px";
 	var lat, long;
@@ -23,7 +23,7 @@ window.onload = function() {
 		"university",
 		"zoo"
 	];
-	
+
 	function type(arr) {
 		var a = 0, l;
 		for(; a < arr.length && ! ~ locationTypes.indexOf(arr[a]); a++);
@@ -77,15 +77,15 @@ window.onload = function() {
 				l = "group";
 				break;
 		}
-		
+
 		console.log(l);
 		return l;
 	}
-	
+
 	function rad(x){
 		return x*Math.PI/180;
 	}
-	
+
 	function distance(lat1, long1, lat2, long2){
 		console.log(lat1,long1,lat2,long2);
 		var R = 6384469;
@@ -96,7 +96,7 @@ window.onload = function() {
 		var d = R * c;
 		return Math.ceil(d/10)*10;
 	}
-	
+
 	function locate() {
 		d.style.background = "#555";
 		d.innerHTML = "<i class='fa fa-cog fa-spin'></i>";
@@ -123,7 +123,7 @@ window.onload = function() {
 			x.send();
 		}
 	}
-	
+
 	function showPosition(position) {
 		lat = position.coords.latitude;
 		long = position.coords.longitude;
@@ -141,11 +141,11 @@ window.onload = function() {
 						var y = document.createElement('div');
 						y.innerHTML = '<a href="/locations/'
 							+ e.place_id
-							+ '"><section class="place"> <section class="icon"> <i class="fa fa-' 
-							+ type(e.types) 
+							+ '"><section class="place"> <section class="icon"> <i class="fa fa-'
+							+ type(e.types)
 							+ '"></i> </section> <section class="main"> <section class="left"> <p>'
-							+ e.name 
-							+'</p> </section> <section class="right">' 
+							+ e.name
+							+'</p> </section> <section class="right">'
 							+ distance(lat, long, e.geometry.location.lat, e.geometry.location.lng)
 							+ 'm</section> </section></a>';
 						document.querySelectorAll(".card .nearby")[0].appendChild(y);
@@ -156,10 +156,10 @@ window.onload = function() {
 			x.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 			x.send("lat="+lat+"&long="+long);
 			document.querySelectorAll(".card .nearby")[0].innerHTML = '<i class="fa fa-cog fa-spin"></i>';
-			
+
 			// Nearby Carparks
-CarparksCarparks			var u = new XMLHttpRequest();
-			u.onreadystatechang   e= function(){
+            var u = new XMLHttpRequest();
+			u.onreadystatechange = function(){
 				if (u.readystate===4 && u.status===200) {
 					document.querySelectorAll(".card .nearby")[1].innerHTML = "";
 					var n = JSON.parse(u.responseText);
@@ -169,8 +169,8 @@ CarparksCarparks			var u = new XMLHttpRequest();
 						y.innerHTML = '<a href="/locations/'
 							+ e.CarParkID
 							+ '"><section class="place"> <section class="icon"> <i class="fa fa-car"></i> </section> <section class="main"> <section class="left"> <p>'
-							+ e.Development 
-							+'</p> </section> <section class="right">' 
+							+ e.Development
+							+'</p> </section> <section class="right">'
 							+ distance(lat, long, e.Latitude, e.Longitude)
 							+ 'm</section> </section></a>';
 						document.querySelectorAll(".card .nearby")[1].appendChild(y);
@@ -183,7 +183,7 @@ CarparksCarparks			var u = new XMLHttpRequest();
 			document.querySelectorAll(".card .nearby")[1].innerHTML = '<i class="fa fa-cog fa-spin"></i>';
 		}
 	}
-	
+
 	function showError(error) {
 		d.style.background = "rgba(192, 57, 43, 1.0)";
 		switch(error.code) {
@@ -201,9 +201,9 @@ CarparksCarparks			var u = new XMLHttpRequest();
 				break;
 		}
 	}
-	
+
 	if(d) locate();
-	
+
 	document.querySelector('.floatbutton').onclick = function() {
 		locate();
 	};
