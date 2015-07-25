@@ -85,12 +85,12 @@ header span{
 	display: inline-block;
 }
 
-.card.name h1{
+.card h1{
 	font-weight: 400;
 	margin-bottom: 0.2em;
 }
 
-.card.name .subinfo{
+.card .subinfo{
 	font-size: 0.8em;
 	color: #999;
 }
@@ -191,3 +191,11 @@ header span{
 	color: #eee;
 	cursor: pointer;
 }
+
+.card.profile{
+	text-align: center;
+}
+
+.card .name{
+	color: rgba(231, 76, 60, 1.0);
+}s
