@@ -45,6 +45,10 @@ header span{
 	right: 1em;
 }
 
+.button.search{
+  right: 3em;
+}
+
 .cardbox{
 	min-height: 100%;
 	padding: 3.5em 0 0.5em 0;
