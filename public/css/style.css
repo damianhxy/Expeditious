@@ -1,0 +1,193 @@
+*{
+	font-family: 'Roboto', sans-serif;
+	//font-weight:  400;
+	box-sizing: border-box;
+}
+
+html, body{
+	margin: 0;
+	height: 100%;
+	background: #ddd;
+}
+
+h1, p{
+	margin: 0;
+}
+
+header{
+	width: 100%;
+	text-align: center;
+	background: rgba(192, 57, 43, 1.0);
+	color: #eee;
+	padding: 1em;
+	font-size: 1em;
+	box-shadow: 0 2px 2px rgba(0,0,0,0.2);
+	position: fixed;
+	z-index: 300;
+}
+
+header span{
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 700;
+}
+
+.cardbox{
+	min-height: 100%;
+	padding: 3.5em 0 0.5em 0;
+	max-width: 800px;
+	margin: auto;
+}
+
+.card{
+	margin: 1em;
+	background: #eee;
+	padding: 1em;
+	box-shadow: 0 2px 2px rgba(0,0,0,0.2);
+	cursor: pointer;
+}
+
+.card.name{
+	position: relative;
+	margin-top: 2.5em;
+	padding-top: 6.5em;
+	text-align: center;
+}
+
+.card.name .img{
+	position: absolute;
+	top: -2em;
+	height: 8em;
+	width: 8em;
+	border-radius: 4em;
+	left: 0;
+	right: 0;
+	margin: auto;
+	border: 6px #eee solid;
+	box-shadow: 0 2px 2px rgba(0,0,0,0.2), inset 0 2px 2px rgba(0,0,0,0.2);
+	display: inline-block;
+}
+
+.card.name .stamp{
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 700;
+	padding: 0 1em;
+	position: absolute;
+	top: 3.5em;
+	height: 2em;
+	width: 9em;
+	line-height: 2em;
+	left: 0;
+	right: 0;
+	margin: auto;
+	background: rgba(46, 204, 113, 1.0);
+	color: #eee;
+	box-shadow: 0 2px 2px rgba(0,0,0,0.2);
+	display: inline-block;
+}
+
+.card.name h1{
+	font-weight: 400;
+	margin-bottom: 0.2em;
+}
+
+.card.name .subinfo{
+	font-size: 0.8em;
+	color: #999;
+}
+
+.card .icon{
+	width: 1em;
+	display: inline-block;
+	text-align: center;
+	margin-right: 1em;
+}
+
+.card .icon.up{
+	vertical-align: top;
+}
+
+.card .icon i{
+	color: #999;
+}
+
+.card .icon.up i{
+	margin-top: 0.5em;
+}
+
+.card .main{
+	width: calc(100% - 2.3em);
+	display: inline-block;
+}
+
+.card .img{
+	width: 100%;
+	height: 15em;
+	background: rgba(46, 204, 113, 1.0) no-repeat center center;
+	background-size: cover;
+	position: relative;
+}
+
+.card .img span{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background: #eee;
+	padding: 0.2em;
+	font-size: 0.6em;
+}
+
+.card .title{
+	font-size: 1.3em;
+}
+
+.card .left{
+	width: 69%;
+	display: inline-block;
+}
+
+.card .right{
+	width: 29%;
+	display: inline-block;
+	text-align: right;
+	color: rgba(231, 76, 60, 1.0);
+}
+
+.card.info{
+	text-align: justify;
+}
+
+.card.info .content{
+	color: #666;
+}
+
+.card.info .source{
+	text-align: right;
+	color: rgba(231, 76, 60, 1.0);
+}
+
+.card.map{
+	background: rgba(46, 204, 113, 1.0);
+	min-height: 10em;
+}
+
+.card .place{
+	padding-top: 1.2em;
+}
+
+.card.input{
+	padding: 0;
+}
+
+.card.input input{
+	width: 100%;
+	font-size: 1em;
+	background: rgba(0,0,0,0);
+	border: 0px;
+	padding: 1em;
+}
+
+.card.input input[type='submit']{
+	background: rgba(192, 57, 43, 1.0);
+	color: #eee;
+	cursor: pointer;
+}
