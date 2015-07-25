@@ -7,7 +7,7 @@ router.use(notification);
 /* Routes */
 router.use("/users", require("./users.js"));
 
-router.use("/location", require("./locations.js"));
+router.use("/locations", require("./locations.js"));
 
 router.get("/search", function(req, res, next) {
     res.render("search", {
