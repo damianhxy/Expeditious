@@ -1,10 +1,10 @@
 window.onload = function() {
 	
 	d = document.querySelector(".card.map");
-	d.style.minHeight = d.offsetWidth/2 + "px";
+	d.style.minHeight = d.offsetWidth*0.66 + "px";
 	
 	function locate(){
-		d.style.background = "rgba(46, 204, 113, 1.0)";
+		d.style.background = "#555";
 		d.innerHTML = "<i class='fa fa-cog fa-spin'></i>";
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(showPosition, showError);

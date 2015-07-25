@@ -52,7 +52,7 @@ header span{
 .cardbox{
 	min-height: 100%;
 	padding: 3.5em 0 0.5em 0;
-	max-width: 800px;
+	max-width: 600px;
 	margin: auto;
 }
 
@@ -186,7 +186,7 @@ header span{
 .card.map{
 	background: rgba(46, 204, 113, 1.0);
 	text-align: center;
-	line-height: 10em;
+	line-height: 100%;
 	color: #eee;
 	transition: 0.3s;
 }
