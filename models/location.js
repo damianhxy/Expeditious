@@ -65,13 +65,13 @@ exports.busCost = function(startLat, startLong, endLat, endLong) {
     });
 };
 
-exports.findNearby = function(lat, long, user) {
+exports.findNearby = function(lat, long, radius) {
     return Q.promise(function(resolve, reject, notify) {
         var host = "maps.googleapis.com";
         var path = "/maps/api/place/nearbysearch/json?";
         path += "key=" + settings.API_KEY;
         path += "&location=" + lat + "," + long;
-        path += "&radius=" + user.preferences.radius;
+        path += "&radius=" + radius;
         path += "&types=" + placesTypes.join("|");
         getRequest({
             host: host,
