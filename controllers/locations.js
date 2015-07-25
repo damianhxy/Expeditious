@@ -8,7 +8,7 @@ router.get("/:id", function(req, res, next) {
     .then(function(response) {
         res.render("place", {
 			user: req.user,
-            response: response
+            location: response.result
         });
     })
     .fail(function(err) {
@@ -19,17 +19,17 @@ router.get("/:id", function(req, res, next) {
 
 router.post("/mark", function(req, res, next) {
 	location.markVisited(req.body.lat, req.body.long, req.user._id)
-	.then(function() {
-		res.end();
+	.then(function(num) {
+		res.send(num);
 	})
 	.fail(function(err) {
 		console.error(err);
 		res.status(400).end();
-	})
+	});
 });
 
 router.post("/nearby", function(req, res, next) {
-    location.findNearby(req.params.lat, req.params.long, req.user.preferences.radius)
+    location.findNearby(req.body.lat, req.body.long, /*req.user.preferences.radius*/ 1500)
     .then(function(response) {
         res.send(response);
     })
@@ -37,6 +37,17 @@ router.post("/nearby", function(req, res, next) {
         console.error(err);
         res.status(400).end();
     });
+});
+
+router.post("/nearbyCarparks", function(req, res, next) {
+	location.findNearbyCarparks(req.body.lat, req.body.long, /*req.user.preferences.radius*/ 1000)
+	.then(function(response) {
+		res.send(response);
+	})
+	.fail(function(err) {
+		console.error(err);
+		res.status(400).end();
+	});
 });
 
 module.exports = router;

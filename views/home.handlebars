@@ -1,50 +1,20 @@
+<script src="/js/main.js"></script>
 <div class="card map">
 	<i class="fa fa-cog fa-spin"></i>
 </div>
 <div class="card">
     <p class="title">Nearby Locations</p>
-    <section class="place">
-        <section class="icon">
-            <i class="fa fa-building"></i>
-        </section>
-        <section class="main">
-            <section class="left">
-                <p>Suntec City</p>
-            </section>
-            <section class="right">
-                <p>50m</p>
-            </section>
-        </section>
-    </section>
-    <section class="place">
-        <section class="icon">
-            <i class="fa fa-building"></i>
-        </section>
-        <section class="main">
-            <section class="left">
-                <p>Suntec City</p>
-            </section>
-            <section class="right">
-                <p>50m</p>
-            </section>
-        </section>
-    </section>
-    <section class="place">
-        <section class="icon">
-            <i class="fa fa-building"></i>
-        </section>
-        <section class="main">
-            <section class="left">
-                <p>Suntec City</p>
-            </section>
-            <section class="right">
-                <p>50m</p>
-            </section>
-        </section>
-    </section>
+	<div class="nearby">
+		<i class="fa fa-cog fa-spin"></i>
+	</div>
 </div>
-
 <div class="card">
+    <p class="title">Nearby Carparks</p>
+	<div class="nearby">
+		<i class="fa fa-cog fa-spin"></i>
+	</div>
+</div>
+<!--div class="card">
     <p class="title">Nearby Carparks</p>
     <section class="place">
         <section class="icon">
@@ -85,9 +55,10 @@
             </section>
         </section>
     </section>
-</div>
+</div-->
 <p class="activitytitle">- ACTIVITY -</p>
-<div class="card activity">
+{{#if user}}
+<div class="card activity" lat, long>
 	<section class="icon up">
 		<i class="fa fa-map-marker"></i>
 	</section>
@@ -113,4 +84,19 @@
 		<span class="name">Sheyuan Yeo</span> visited <span class="name">Potato HQ</span>
 		<p class="subinfo">July 25 2015</p>
 	</section>
+</div>
+{{else}}
+<a href="/users/login">
+<div class="card">
+	<section class="icon">
+		<i class="fa fa-frown-o"></i>
+	</section>
+	<section class="main">
+		Login to see activity
+	</section>
+</div>
+</a>
+{{/if}}
+<div class="floatbutton">
+	<i class="fa fa-flag"></i>
 </div>

@@ -13,8 +13,8 @@ module.exports = function(app, express) {
     var hbs = exphbs.create({
         defaultLayout: "default",
         helpers: {
-            visited: function(identify) {
-				//stub
+            visited: function(arr1, check) {
+				return ~arr1.indexOf(check) ? "VISITED" : "NOT VISITED" ;
 			},
 			length: function(arr) {
 				return arr.length;
@@ -24,49 +24,52 @@ module.exports = function(app, express) {
 				for(; a < arr.length && ! ~ location.types.indexOf(arr[a]); a++);
 				switch(arr[a]) {
 					case "airport":
-						d = "plane";
+						l = "plane";
 						break;
 					case "amusement_park":
-						d = "space-shuttle";
+						l = "space-shuttle";
 						break;
 					case "aquarium":
-						d = "anchor";
+						l = "anchor";
 						break;
 					case "art_gallery":
-						d = "image";
+						l = "paint-brush";
 						break;
 					case "casino":
-						d = "money";
+						l = "money";
 						break;
 					case "hospital":
-						d = "plus";
+						l = "ambulance";
 						break;
 					case "library":
-						d = "book";
+						l = "book";
 						break;
 					case "museum":
-						d = "insititution";
+						l = "institution";
 						break;
 					case "park":
-						d = "tree";
+						l = "tree";
 						break;
 					case "shopping_mall":
-						d = "building";
+						l = "building";
 						break;
 					case "stadium":
-						d = "soccer-ball-o";
+						l = "soccer-ball-o";
 						break;
+					case "school":
 					case "university":
-						d = "academic-cap";
+						l = "graduation-cap";
 						break;
 					case "zoo":
-						d = "paw";
+						l = "paw";
+						break;
+					case "mosque":
+						l = "moon-o";
 						break;
 					case "church":
-					case "mosque":
 					case "hindu_temple":
 					case "synagogue":
-						d = "group";
+						l = "group";
 						break;
 				}
 				return d;
@@ -75,9 +78,9 @@ module.exports = function(app, express) {
 				var a = 0, d;
 				for(; a < arr.length && ! ~ location.types.indexOf(arr[a]); a++);
 				d = arr[a];
-				d.replace("_"," ");
+				d = d.replace("_"," ");
 				//titlecase
-				d.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+				d = d.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 				return d;
 			},
 			list: function(arr) {

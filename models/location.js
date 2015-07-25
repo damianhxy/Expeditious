@@ -22,6 +22,7 @@ var placesTypes = exports.types = [
     "mosque",
 	"museum",
 	"park",
+	"school",
     "shopping_mall",
 	"stadium",
     "synagogue",
@@ -91,12 +92,33 @@ var nearby = exports.findNearby = function(lat, long, radius) {
     });
 };
 
+exports.findNearbyCarparks = function(lat, long, radius) {
+	return Q.promise(function(resolve, reject, notify) {
+		var host = "datamall.mytransport.sg";
+		var path = "/ltaodataservice.svc/CarParkSet";
+		path += "AccountKey=" + settings.ACCOUNT_KEY;
+		path += "&UniqueUserID=" + settings.UniqueUserID;
+		path += "&accept=application/json";
+		console.log(path);
+		getRequest({
+			host: host,
+			path: path
+		})
+		.then(function(res) {
+			resolve(JSON.parse(res));
+		})
+		.then(function(err) {
+			reject(err);
+		});
+	});
+};
+
 exports.getPlace = function(id) {
     return Q.promise(function(resolve, reject, notify) {
         var host = "maps.googleapis.com";
         var path = "/maps/api/place/details/json?";
         path += "key=" + settings.API_KEY;
-        path += "&placeid" + id;
+        path += "&placeid=" + id;
         getRequest({
             host: host,
             path: path
@@ -118,10 +140,10 @@ exports.markVisited = function(lat, long, userid) {
 			var locations = [];
 			for (var location in res.results)
 				locations.push(user.addVisited(userid, res.results[location].place_id,now));
-			return Q.all(locations);
-		})
-		.then(function() {
-			resolve();
+			Q.all(locations)
+				.then(function() {
+					resolve(res.results.length);
+				});	
 		})
 		.fail(function(err) {
 			reject(err);
@@ -137,7 +159,7 @@ exports.search = function(str) {
         path += "&location=" + 1.19 + "," + 103.805;
         path += "&radius=" + 25000;
         path += "&types=" + placesTypes.join("|");
-		path += "&name="  + str;
+		path += "&name="  + str.replace(/ /g, "+");
         getRequest({
             host: host,
             path: path

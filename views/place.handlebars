@@ -1,23 +1,38 @@
 <div class="card name">
 	<div class="img" style="background-image: url('{{location.image}}')"></div>
-	{{#visited location.name}}
+	{{#if user}}<div class="stamp {{visited user.visited location.name}}">{{visited user.visited location.name}}</div>{{/if}}
 	<h1>{{location.name}}</h1>
-	<p class="subinfo"><i class="fa fa-{{type location.types}}"></i> {{typename types}}</p>
-	{{#if location.address}}
-	<p class="subinfo"><i class="fa fa-map-marker"></i> {{location.address}}</p>
+	<p class="subinfo"><i class="fa fa-{{types location.types}}"></i> {{typename location.types}}</p>
+	{{#if location.formatted_address}}
+	<p class="subinfo"><i class="fa fa-map-marker"></i> {{location.formatted_address}}</p>
 	{{/if}}
 	{{#if location.hours}}
 		<p class="subinfo"><i class="fa fa-clock-o"></i> {{location.hours}}</p>
 	{{/if}}
+	{{#if location.rating}}
+	<p class="subinfo"><i class="fa fa-star"></i> Rating: {{location.rating}}</p>
+	{{/if}}
 </div>
-{{#if location.info}}
+{{#if location.website}}
+<a href="{{location.website}}">
+<div class="card">
+	<section class="icon">
+		<i class="fa fa-link"></i>
+	</section>
+	<section class="main">
+		Visit Website
+	</section>
+</div>
+</a>
+{{/if}}
+{{#if info}}
 <div class="card info">
 	<section class="icon up">
 		<i class="fa fa-info-circle"></i>
 	</section>
 	<section class="main">
-		<p class="content">{{location.info.text}}</p>
-		<p class="source">{{location.info.source}}</p>
+		<p class="content">{{info.text}}</p>
+		<p class="source">{{info.source}}</p>
 	</section>
 </div>
 {{/if}}
