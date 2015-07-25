@@ -2,6 +2,12 @@ var express = require("express");
 var passport = require("passport");
 var router = express.Router();
 
+router.get("/logout", auth, function(req, res, next) {
+    req.session.success = "Successfully signed out.";
+    req.logout();
+    res.redirect("/");
+});
+
 router.post("/signin", function(req, res, next) {
     passport.authenticate("local-signin", function(err, user, info) {
         if (err) return next(err);

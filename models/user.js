@@ -3,6 +3,18 @@ var nedb = require("nedb");
 var bcryptjs = require("bcryptjs");
 var users = new nedb({filename: "./database/users", autoload: true});
 
+exports.all = function() {
+    return Q.promise(function(resolve, reject, notify) {
+        return Q.ninvoke(users, "find", {})
+        .then(function(list) {
+            resolve(list);
+        })
+        .fail(function(err) {
+            reject(err);
+        });
+    });
+};
+
 exports.authenticate = function(username, password) {
     return Q.promise(function(resolve, reject, notify) {
         return Q.ninvoke(users, "findOne", { username: username })
@@ -35,10 +47,23 @@ exports.create = function(name, username, password) {
                     "username": username,
                     "hash": hash,
                     "salt": salt
+                    /*preferences*/
                 };
                 return Q.ninvoke(users, "insert", user);
             });
         })
+        .then(function(user) {
+            resolve(user);
+        })
+        .fail(function(err) {
+            reject(err);
+        });
+    });
+};
+
+exports.get = function(id) {
+    return Q.promise(function(resolve, reject, notify) {
+        return Q.ninvoke(users, "findOne", { _id: id })
         .then(function(user) {
             resolve(user);
         })
