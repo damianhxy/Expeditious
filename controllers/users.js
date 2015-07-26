@@ -111,7 +111,7 @@ router.get("/:id", function(req, res, next) {
 			title: "PROFILE",
 			user: req.user,
 			profile: user
-		});		
+		});
 	})
 	.fail(function(err) {
 		console.error(err);

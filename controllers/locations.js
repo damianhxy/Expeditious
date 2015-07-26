@@ -1,7 +1,9 @@
 var express = require("express");
+var Q = require("q");
 var passport = require("passport");
 var router = express.Router();
 var location = require("../models/location.js");
+var user = require("../models/user.js");
 
 function rad(x){
     return x*Math.PI/180;
@@ -43,7 +45,17 @@ router.post("/mark", function(req, res, next) {
 });
 
 router.post("/nearby", function(req, res, next) {
-    location.findNearby(req.body.lat, req.body.long, /*req.user.preferences.radius*/ 1500)
+    location.findNearby(req.body.lat, req.body.long, 50)
+    .then(function(response) {
+        var locations = [];
+        for (var loc of response.results)
+            locations.push(user.addVisited(req.user._id, response.results[loc].place_id, Date.now()));
+        Q.all(locations)
+        .then(function() {
+            req.session.success = "Visited " + locations.length + " more places!";
+            return location.findNearby(req.body.lat, req.body.long, /*req.user.preferences.radius*/ 1500);
+        });
+    })
     .then(function(response) {
         res.send(response);
     })

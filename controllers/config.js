@@ -8,8 +8,10 @@ var session = require("express-session");
 var exphbs = require("express-handlebars");
 var localStrategy = require("passport-local");
 var location = require("../models/location.js");
+var notifications = require("../middlewares/notification.js");
 
 module.exports = function(app, express) {
+    app.use(notifications);
     var hbs = exphbs.create({
         defaultLayout: "default",
         helpers: {
@@ -116,7 +118,7 @@ module.exports = function(app, express) {
             return user.authenticate(username, password)
             .then(function(user) {
                 console.info("Signed in " + user.username);
-                // req.session.success = "Welcome back, " + user.username + ".";
+                req.session.success = "Welcome back, " + user.username + ".";
                 done(null, user);
             })
             .fail(function(err) {
@@ -133,7 +135,7 @@ module.exports = function(app, express) {
             return user.create(req.body.name, username, password, req.body.password2)
             .then(function(user) {
                 console.info("Signed up " + user.username);
-                // req.session.success = "Welcome, " + user.username + ".";
+                req.session.success = "Welcome, " + user.username + ".";
                 done(null, user);
             })
             .fail(function(err) {
