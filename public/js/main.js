@@ -173,6 +173,7 @@ window.onload = function() {
 							+ '"><section class="place"> <section class="icon"> <i class="fa fa-car"></i> </section> <section class="main"> <section class="left"> <p>'
 							+ e.Development
 							+'</p> </section> <section class="right">'
+							+ "("+ e.Lots + " lots) "
 							+ distance(lat, long, e.Latitude, e.Longitude)
 							+ 'm</section> </section></a>';
 						document.querySelectorAll(".card .nearby")[1].appendChild(y);
