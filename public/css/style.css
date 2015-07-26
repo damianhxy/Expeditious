@@ -58,6 +58,10 @@ header span{
 	left: 1em;
 }
 
+.button.leader{
+	left: 4em;
+}
+
 .button.right{
 	right: 1em;
 }

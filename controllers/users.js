@@ -6,7 +6,7 @@ var user = require("../models/user.js");
 var settings = require("../controllers/settings.js");
 var moment = require("moment");
 
-router.get("/leaderboard", function(req, res, next) {
+router.get("/leaderboards", function(req, res, next) {
     user.generateLeaderboard()
     .then(function(response) {
         res.render("leaderboards", {
@@ -64,25 +64,23 @@ router.post("/signup", function(req, res, next) {
 
 router.get("/:id", function(req, res, next) {
 	user.get(req.params.id)
-	.then(function(user) {
+	.then(function(usr) {
 		var now = Date.now();
-		user.joined = moment(user.joined).format(settings.MOMENTJS_JOINED_FORMAT);
-		user.visited.filter(function(e) {
+		console.log(usr);
+		usr.joined = moment(usr.joined).format(settings.MOMENTJS_JOINED_FORMAT);
+		usr.visited.filter(function(e) {
 			return now - e.time <= 86400000;
 		});
-		user.visited.forEach(function(e) {
+		usr.visited.forEach(function(e) {
 			e = moment(e).format(settings.MOMENTJS_ACTIVITY_FORMAT);
 		});
-		user.visited.sort(function(a, b) { // Greater comes first
+		usr.visited.sort(function(a, b) { // Greater comes first
 			return b.time - a.time;
 		});
-		var isFollowing = false;
-		for (var followee in req.user.following)
-			if (req.user.following[followee] === user._id)
 		res.render("profile", {
 			title: "PROFILE",
 			user: req.user,
-			profile: user
+			profile: usr
 		});
 	})
 	.fail(function(err) {

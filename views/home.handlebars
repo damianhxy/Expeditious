@@ -14,54 +14,21 @@
 		<i class="fa fa-cog fa-spin"></i>
 	</div>
 </div>
-<!--div class="card">
-    <p class="title">Nearby Carparks</p>
-    <section class="place">
-        <section class="icon">
-            <i class="fa fa-car"></i>
-        </section>
-        <section class="main">
-            <section class="left">
-                <p>Suntec City</p>
-            </section>
-            <section class="right">
-                <p>50m</p>
-            </section>
-        </section>
-    </section>
-    <section class="place">
-        <section class="icon">
-            <i class="fa fa-car"></i>
-        </section>
-        <section class="main">
-            <section class="left">
-                <p>Suntec City</p>
-            </section>
-            <section class="right">
-                <p>50m</p>
-            </section>
-        </section>
-    </section>
-    <section class="place">
-        <section class="icon">
-            <i class="fa fa-car"></i>
-        </section>
-        <section class="main">
-            <section class="left">
-                <p>Suntec City</p>
-            </section>
-            <section class="right">
-                <p>50m</p>
-            </section>
-        </section>
-    </section>
-</div-->
 <p class="activitytitle">- ACTIVITY -</p>
 {{#if user}}
+<div class="card activity">
+	<section class="icon up">
+		<i class="fa fa-map-marker"></i>
+	</section>
+	<section class="main">
+		<span class="name">USER</span> visited <span class="name">PLACE</span>
+		<p class="subinfo">25th July 2015</p>
+	</section>
+</div>
 {{#each activities}}
 <div class="card activity">
 	<section class="icon up">
-		<i class="fa fa-map-marker"></o>
+		<i class="fa fa-map-marker"></i>
 	</section>
 	<section class="main">
 		<span class="name">{{this.userid}}</span> visited <span class="name">this.name</span>
