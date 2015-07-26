@@ -24,52 +24,52 @@ module.exports = function(app, express) {
 				for(; a < arr.length && ! ~ location.types.indexOf(arr[a]); a++);
 				switch(arr[a]) {
 					case "airport":
-						l = "plane";
+						d = "plane";
 						break;
 					case "amusement_park":
-						l = "space-shuttle";
+						d = "space-shuttle";
 						break;
 					case "aquarium":
-						l = "anchor";
+						d = "anchor";
 						break;
 					case "art_gallery":
-						l = "paint-brush";
+						d = "paint-brush";
 						break;
 					case "casino":
-						l = "money";
+						d = "money";
 						break;
 					case "hospital":
-						l = "ambulance";
+						d = "ambulance";
 						break;
 					case "library":
-						l = "book";
+						d = "book";
 						break;
 					case "museum":
-						l = "institution";
+						d = "institution";
 						break;
 					case "park":
-						l = "tree";
+						d = "tree";
 						break;
 					case "shopping_mall":
-						l = "building";
+						d = "building";
 						break;
 					case "stadium":
-						l = "soccer-ball-o";
+						d = "soccer-ball-o";
 						break;
 					case "school":
 					case "university":
-						l = "graduation-cap";
+						d = "graduation-cap";
 						break;
 					case "zoo":
-						l = "paw";
+						d = "paw";
 						break;
 					case "mosque":
-						l = "moon-o";
+						d = "moon-o";
 						break;
 					case "church":
 					case "hindu_temple":
 					case "synagogue":
-						l = "group";
+						d = "group";
 						break;
 				}
 				return d;

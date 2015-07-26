@@ -8,7 +8,6 @@ function rad(x){
 }
 
 function distance(lat1, long1, lat2, long2){
-    console.log(lat1,long1,lat2,long2);
     var R = 6384469;
     var dLat = rad(lat2-lat1);
     var dLong = rad(long2-long1);

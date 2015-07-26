@@ -12,7 +12,20 @@ router.use("/locations", require("./locations.js"));
 router.get("/search", function(req, res, next) {
     res.render("search", {
         title: "SEARCH",
-        user: req.user
+        user: req.user,
+        hot: [{
+            place_id: "ChIJ0QX_Brki2jER-pZKNdqk_a8",
+            types: ["park"],
+            description: "East Coast Park"
+        }, {
+            place_id: "ChIJMcwh6o0Z2jERNxsLqnSIvlw",
+            types: ["shopping_mall"],
+            description: "ION Orchard"
+        }, {
+            place_id: "ChIJHUH7GiY92jER6cr6vHkVWiA",
+            types: ["school"],
+            description: "ITE College East"
+        }]
     });
 });
 
