@@ -54,7 +54,7 @@ router.post("/mark", function(req, res, next) {
 });
 
 router.post("/nearby", function(req, res, next) {
-	if (req.user)
+	/*if (req.user)
 		location.markVisited(req.body.lat, req.body.long, req.user._id)
 		.then(Q.fcall(location.findNearby(req.body.lat, req.body.long, 1500)))
 		.then(function(response) {
@@ -64,7 +64,7 @@ router.post("/nearby", function(req, res, next) {
 			console.error(err);
 			res.status(400).end();
 		});
-	else
+	else*/
 		location.findNearby(req.body.lat, req.body.long, 1500)
 		.then(function(response) {
 			res.send(response);

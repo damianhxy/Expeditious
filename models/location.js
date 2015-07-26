@@ -116,7 +116,7 @@ exports.markVisited = function(lat, long, userid) {
 			.then(function() {
 				console.log("Added " + res.results.length + " locations to visited!");
 				console.info(res);
-				resolve(res.results.length);
+				resolve();
 			});
 		})
 		.fail(function(err) {
