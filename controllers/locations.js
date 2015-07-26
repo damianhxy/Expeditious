@@ -42,6 +42,7 @@ router.post("/nearby", function(req, res, next) {
 router.post("/nearbyCarparks", function(req, res, next) {
 	location.findNearbyCarparks(req.body.lat, req.body.long, /*req.user.preferences.radius*/ 1000)
 	.then(function(response) {
+        console.log(response);
 		res.send(response);
 	})
 	.fail(function(err) {

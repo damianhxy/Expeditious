@@ -1,6 +1,6 @@
 var Q = require("q");
 var nedb = require("nedb");
-var https = require("https");
+var request = require("request");
 var settings = require("../controllers/settings.js");
 var users = require("./user.js");
 /*
@@ -30,104 +30,79 @@ var placesTypes = exports.types = [
     "zoo"
 ];
 
-function getRequest(options) {
-    return Q.promise(function(resolve, reject, notify) {
-        var callback = function(res) {
-            var response = "";
-            res.on("data", function(chunk) {
-                response += chunk;
-            });
-            res.on("end", function() {
-                resolve(response);
-            });
-        }
-        https.request(options, callback).end();
-    });
-}
-
 exports.busCost = function(startLat, startLong, endLat, endLong) {
     return Q.promise(function(resolve, reject, notify) {
-        var host = "maps.googleapis.com";
+        var host = "https://maps.googleapis.com";
         var path = "/maps/api/directions/json?";
         path += "origin=" + startLat + "," + startLong;
         path += "&destination=" + endLat + "," + endLong;
         path += "&mode=transit";
-        getRequest({
-            host: host,
-            path: path
-        })
-        .then(function(res) {
-            var totalCost = 0;
-            res = JSON.parse(res);
-            res.routes.forEach(function(e) {
-                if (e.fare)
-                    totalCost += e.fare.value;
-            });
-            resolve(totalCost);
-        })
-        .fail(function(err) {
-            reject(err);
-        })
+        request(host + path, function(error, response, body) {
+            if (!error && response.statusCode === 200) {
+                var totalCost = 0;
+                body = JSON.parse(body);
+                body.routes.forEach(function(e) {
+                    if (e.fare)
+                        totalCost += e.fare.value;
+                });
+                resolve(totalCost)
+            } else {
+                reject(err);
+            }
+        });
     });
 };
 
 var nearby = exports.findNearby = function(lat, long, radius) {
     return Q.promise(function(resolve, reject, notify) {
-        var host = "maps.googleapis.com";
+        var host = "https://maps.googleapis.com";
         var path = "/maps/api/place/nearbysearch/json?";
         path += "key=" + settings.API_KEY;
         path += "&location=" + lat + "," + long;
         path += "&radius=" + radius;
         path += "&types=" + placesTypes.join("|");
-        getRequest({
-            host: host,
-            path: path
-        })
-        .then(function(res) {
-            resolve(JSON.parse(res));
-        })
-        .fail(function(err) {
-            reject(err);
+        request(host + path, function(error, response, body) {
+            if (!error && response.statusCode === 200)
+                resolve(JSON.parse(body));
+            else
+                reject(error);
         });
     });
 };
 
 exports.findNearbyCarparks = function(lat, long, radius) {
 	return Q.promise(function(resolve, reject, notify) {
-		var host = "datamall.mytransport.sg";
+		var host = "http://datamall.mytransport.sg";
 		var path = "/ltaodataservice.svc/CarParkSet";
-		path += "AccountKey=" + settings.ACCOUNT_KEY;
-		path += "&UniqueUserID=" + settings.UniqueUserID;
-		path += "&accept=application/json";
-		console.log(path);
-		getRequest({
-			host: host,
-			path: path
-		})
-		.then(function(res) {
-			resolve(JSON.parse(res));
-		})
-		.then(function(err) {
-			reject(err);
-		});
+		var options = {
+            url: host + path,
+            headers: {
+                "AccountKey": settings.ACCOUNT_KEY,
+                "UniqueUSERID": settings.UniqueUserID,
+                "accept": "application/json"
+            }
+        };
+        function callback(error, response, body) {
+            if (!error && response.statusCode === 200)
+                resolve(JSON.parse(body));
+            else
+                reject(error);
+        }
+		request(options, callback);
 	});
 };
 
 exports.getPlace = function(id) {
     return Q.promise(function(resolve, reject, notify) {
-        var host = "maps.googleapis.com";
+        var host = "https://maps.googleapis.com";
         var path = "/maps/api/place/details/json?";
         path += "key=" + settings.API_KEY;
         path += "&placeid=" + id;
-        getRequest({
-            host: host,
-            path: path
-        })
-        .then(function(res) {
-            resolve(JSON.parse(res));
-        })
-        .fail(function(err) {
-            reject(err);
+        request(host + path, function(error, response, body) {
+            if (!error && response.statusCode === 200)
+                resolve(JSON.parse(body));
+            else
+                reject(error);
         });
     });
 };
@@ -143,7 +118,7 @@ exports.markVisited = function(lat, long, userid) {
 			Q.all(locations)
 				.then(function() {
 					resolve(res.results.length);
-				});	
+				});
 		})
 		.fail(function(err) {
 			reject(err);
@@ -153,22 +128,18 @@ exports.markVisited = function(lat, long, userid) {
 
 exports.search = function(str) {
 	return Q.promise(function(resolve, reject, notify) {
-		var host = "maps.googleapis.com";
+		var host = "https://maps.googleapis.com";
         var path = "/maps/api/place/nearbysearch/json?";
         path += "key=" + settings.API_KEY;
         path += "&location=" + 1.19 + "," + 103.805;
         path += "&radius=" + 25000;
         path += "&types=" + placesTypes.join("|");
 		path += "&name="  + str.replace(/ /g, "+");
-        getRequest({
-            host: host,
-            path: path
-        })
-        .then(function(res) {
-            resolve(JSON.parse(res));
-        })
-        .fail(function(err) {
-            reject(err);
+        request(host + path, function(error, response, body) {
+            if (!error && response.statusCode === 200)
+                resolve(JSON.parse(body));
+            else
+                reject(error);
         });
-	});		
+	});
 };

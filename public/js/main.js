@@ -160,7 +160,9 @@ window.onload = function() {
 			// Nearby Carparks
             var u = new XMLHttpRequest();
 			u.onreadystatechange = function(){
-				if (u.readystate===4 && u.status===200) {
+				console.log(u.readyState);
+				console.log(u.status);
+				if (u.readyState===4 && u.status===200) {
 					document.querySelectorAll(".card .nearby")[1].innerHTML = "";
 					var n = JSON.parse(u.responseText);
 					n.d = n.d.slice(0, 5);
