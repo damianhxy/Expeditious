@@ -5,32 +5,6 @@ var auth = require("../middlewares/auth.js");
 var user = require("../models/user.js");
 var settings = require("../controllers/settings.js");
 var moment = require("moment");
-var Q = require("q");
-
-router.post("/activity", function(req, res, next) {
-    var following = [], activities = [];
-    for (var followee in req.user.following)
-        following.push(user.get(req.user.following[followee]));
-    Q.all(following)
-    .then(function(followers) {
-        var now = Date.now();
-        for (var follower in followers) {
-            followers[follower].visited.filter(function(e) {
-                return now - e.time <= 86400000;
-            });
-            for (var visit in followers[follower].visited)
-                activities.push(followers[follower].visited[visit]);
-        }
-		activities.sort(function(a, b) { // Latest comes first
-			return b.time - a.time;
-		});
-        res.send(activities);
-    })
-    .fail(function(err) {
-        console.error(err.stack);
-        next(err);
-    });
-});
 
 router.get("/login", function(req, res, next) {
     res.render("login", {

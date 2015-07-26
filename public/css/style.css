@@ -24,11 +24,6 @@ h1, p{
 input[type="submit"]{
   	-webkit-appearance: none;
   	-webkit-border-radius: 0;
-	transition: background-color 0.5s;
-}
-
-input[type="submit"]:hover{
-	background-color: rgba(231, 76, 60, 1.0);
 }
 
 a{
@@ -311,4 +306,17 @@ header span{
 	font-size: 1.5em;
 	box-shadow: 0 2px 2px rgba(0,0,0,0.2);
 	cursor: pointer;
+	transition:background-color 0.5s;
+}
+
+.floatbutton:hover{
+	background-color: rgba(231, 76, 60, 1.0);
+}
+
+#login{
+	transition:background-color 0.5s;
+}
+
+#login:hover{
+	background-color: rgba(231, 76, 60, 1.0);
 }

@@ -8,10 +8,8 @@ var session = require("express-session");
 var exphbs = require("express-handlebars");
 var localStrategy = require("passport-local");
 var location = require("../models/location.js");
-var notifications = require("../middlewares/notification.js");
 
 module.exports = function(app, express) {
-    app.use(notifications);
     var hbs = exphbs.create({
         defaultLayout: "default",
         helpers: {
@@ -26,52 +24,52 @@ module.exports = function(app, express) {
 				for(; a < arr.length && ! ~ location.types.indexOf(arr[a]); a++);
 				switch(arr[a]) {
 					case "airport":
-						d = "plane";
+						l = "plane";
 						break;
 					case "amusement_park":
-						d = "space-shuttle";
+						l = "space-shuttle";
 						break;
 					case "aquarium":
-						d = "anchor";
+						l = "anchor";
 						break;
 					case "art_gallery":
-						d = "paint-brush";
+						l = "paint-brush";
 						break;
 					case "casino":
-						d = "money";
+						l = "money";
 						break;
 					case "hospital":
-						d = "ambulance";
+						l = "ambulance";
 						break;
 					case "library":
-						d = "book";
+						l = "book";
 						break;
 					case "museum":
-						d = "institution";
+						l = "institution";
 						break;
 					case "park":
-						d = "tree";
+						l = "tree";
 						break;
 					case "shopping_mall":
-						d = "building";
+						l = "building";
 						break;
 					case "stadium":
-						d = "soccer-ball-o";
+						l = "soccer-ball-o";
 						break;
 					case "school":
 					case "university":
-						d = "graduation-cap";
+						l = "graduation-cap";
 						break;
 					case "zoo":
-						d = "paw";
+						l = "paw";
 						break;
 					case "mosque":
-						d = "moon-o";
+						l = "moon-o";
 						break;
 					case "church":
 					case "hindu_temple":
 					case "synagogue":
-						d = "group";
+						l = "group";
 						break;
 				}
 				return l;
@@ -89,7 +87,8 @@ module.exports = function(app, express) {
 				return arr.join(',');
 			},
 			photos: function(arr){
-				return arr[2].photo_reference || arr[1].photo_reference || arr[0].photo_reference;
+				if(arr) return arr[Math.min(2,arr.length - 1)].photo_reference;
+				else return 0;
 			}
         }
     });
@@ -121,7 +120,7 @@ module.exports = function(app, express) {
             return user.authenticate(username, password)
             .then(function(user) {
                 console.info("Signed in " + user.username);
-                req.session.success = "Welcome back, " + user.username + ".";
+                // req.session.success = "Welcome back, " + user.username + ".";
                 done(null, user);
             })
             .fail(function(err) {
@@ -138,7 +137,7 @@ module.exports = function(app, express) {
             return user.create(req.body.name, username, password, req.body.password2)
             .then(function(user) {
                 console.info("Signed up " + user.username);
-                req.session.success = "Welcome, " + user.username + ".";
+                // req.session.success = "Welcome, " + user.username + ".";
                 done(null, user);
             })
             .fail(function(err) {

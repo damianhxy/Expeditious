@@ -121,6 +121,24 @@ exports.markVisited = function(lat, long, userid) {
 	});
 };
 
+exports.getInfo = function(title){
+	return Q.promise(function(resolve, reject, notify) {
+		var host = "https://en.wikipedia.org";
+		title.replace("Mall","");
+		var path = "/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=" + title;
+		var options = {
+            url: host + path
+        };
+        function callback(error, response, body) {
+            if (!error && response.statusCode === 200)
+                resolve(JSON.parse(body));
+            else
+                reject(error);
+        }
+		request(options, callback);
+	});
+}
+
 exports.search = function(str) {
 	return Q.promise(function(resolve, reject, notify) {
 		var host = "https://maps.googleapis.com";

@@ -2,14 +2,14 @@ var express = require("express");
 var passport = require("passport");
 var router = express.Router();
 var location = require("../models/location.js");
-var settings = require("./settings.js")
+var settings = require("./settings.js");
+var Q = require("q");
 
 function rad(x){
     return x*Math.PI/180;
 }
 
 function distance(lat1, long1, lat2, long2){
-    console.log(lat1,long1,lat2,long2);
     var R = 6384469;
     var dLat = rad(lat2-lat1);
     var dLong = rad(long2-long1);
@@ -20,12 +20,20 @@ function distance(lat1, long1, lat2, long2){
 }
 
 router.get("/:id", function(req, res, next) {
-    location.getPlace(req.params.id)
+	var l, d;
+	location.getPlace(req.params.id)
     .then(function(response) {
-        res.render("place", {
+        l = response.result;
+		return location.getInfo(response.result.name);
+	})
+	.then(function(info) {
+		d = info.query.pages[Object.keys(info.query.pages)[0]].extract;
+		if(d) d = d.split('.')[0] + '.' + d.split('.')[1] + '.';
+		res.render("place", {
 			user: req.user,
-            location: response.result,
-			key: settings.API_KEY
+            location: l,
+			key: settings.API_KEY,
+			desc: d
         });
     })
     .fail(function(err) {
@@ -46,7 +54,19 @@ router.post("/mark", function(req, res, next) {
 });
 
 router.post("/nearby", function(req, res, next) {
-    location.findNearby(req.body.lat, req.body.long, /*req.user.preferences.radius*/ 1500)
+	/*location.findNearby(req.body.lat, req.body.long, 50)
+    .then(function(response) {
+        var locations = [];
+        for (var loc in response.results)
+            locations.push(user.addVisited(req.user._id, response.results[loc].place_id, Date.now()));
+		console.log(locations);
+        Q.all(locations)
+        .then(function() {
+            /req.session.success = "Visited " + locations.length + " more places!";
+            return location.findNearby(req.body.lat, req.body.long, 1500);
+        });
+    })*/
+	location.findNearby(req.body.lat, req.body.long, 1500)
     .then(function(response) {
         res.send(response);
     })

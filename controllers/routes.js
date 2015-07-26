@@ -1,8 +1,9 @@
 var express = require("express");
 var router = express.Router();
-var notification = require("../middlewares/notification.js");
+//var notification = require("../middlewares/notification.js");
 var location = require("../models/location.js");
-router.use(notification);
+//router.use(notification);
+var user = require("../models/user.js");
 
 /* Routes */
 router.use("/users", require("./users.js"));
@@ -45,6 +46,32 @@ router.post("/search", function(req, res, next) {
 });
 
 router.get("/", function(req, res, next) {
+    if (req.user) {
+        var following = [], activities = [];
+        for (var followee in req.user.following) {
+            following.push(user.get(req.user.following[followee]));
+        }
+        Q.all(following)
+        .then(function(followers) {
+            var now = Date.now();
+            for (var follower in followers) {
+                followers[follower].visited.filter(function(e) {
+                    return now - e.time <= 86400000;
+                });
+                for (var visit in followers[follower].visited) {
+                    activities.push(followers[follower].visited[visit]);
+                }
+            }
+            activities.sort(function(a, b) { // Latest comes first
+                return b.time - a.time;
+            });
+            res.render("home", {
+                title: "EXPEDITIO",
+                user: req.user,
+                activities: activities
+            });
+        });
+    } else
     res.render("home", {
         title: "EXPEDITIO",
         user: req.user
