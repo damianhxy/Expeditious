@@ -20,7 +20,7 @@ module.exports = function(app, express) {
 				return arr.length;
 			},
 			types: function(arr) {
-				var a = 0, d;
+				var a = 0, l;
 				for(; a < arr.length && ! ~ location.types.indexOf(arr[a]); a++);
 				switch(arr[a]) {
 					case "airport":
@@ -72,7 +72,7 @@ module.exports = function(app, express) {
 						l = "group";
 						break;
 				}
-				return d;
+				return l;
 			},
 			typename: function(arr) {
 				var a = 0, d;
@@ -85,6 +85,9 @@ module.exports = function(app, express) {
 			},
 			list: function(arr) {
 				return arr.join(',');
+			},
+			photos: function(arr){
+				return arr[2].photo_reference || arr[1].photo_reference || arr[0].photo_reference;
 			}
         }
     });

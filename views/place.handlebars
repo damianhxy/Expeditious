@@ -1,5 +1,5 @@
 <div class="card name">
-	<div class="img" style="background-image: url('{{location.image}}')"></div>
+	<div class="img" style="background-image: url('https://maps.googleapis.com/maps/api/place/photo?key={{key}}&photoreference={{photos location.photos}}&maxwidth=400')"></div>
 	{{#if user}}<div class="stamp {{visited user.visited location.name}}">{{visited user.visited location.name}}</div>{{/if}}
 	<h1>{{location.name}}</h1>
 	<p class="subinfo"><i class="fa fa-{{types location.types}}"></i> {{typename location.types}}</p>

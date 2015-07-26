@@ -2,6 +2,7 @@ var express = require("express");
 var passport = require("passport");
 var router = express.Router();
 var location = require("../models/location.js");
+var settings = require("./settings.js")
 
 function rad(x){
     return x*Math.PI/180;
@@ -23,7 +24,8 @@ router.get("/:id", function(req, res, next) {
     .then(function(response) {
         res.render("place", {
 			user: req.user,
-            location: response.result
+            location: response.result,
+			key: settings.API_KEY
         });
     })
     .fail(function(err) {

@@ -16,13 +16,13 @@
 </head>
 <body data-user="{{user._id}}">
 	<header>
-		<a href="/" class="button left"><i class="fa fa-home"></i></a>
+		<a href="/" class="button left"><i class="fa fa-home fa-lg"></i></a>
 		<span>EXPEDITIO</span>
-		<a href="/search" class="button search"><i class="fa fa-search"></i></a>
+		<a href="/search" class="button search"><i class="fa fa-search fa-lg"></i></a>
 		{{#if user}}
-			<a href="/users/{{user._id}}" class="button right"><i class="fa fa-user"></i></a>
+			<a href="/users/{{user._id}}" class="button right"><i class="fa fa-user fa-lg"></i></a>
 		{{else}}
-			<a href="/users/login" class="button right"><i class="fa fa-sign-in"></i></a>
+			<a href="/users/login" class="button right"><i class="fa fa-sign-in fa-lg"></i></a>
 		{{/if}}
 	</header>
 	<div class="cardbox">
