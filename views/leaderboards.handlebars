@@ -1,0 +1,28 @@
+<div class="card head">
+	<section class="icon">
+		#
+	</section>
+	<section class="main">
+		<section class="left">
+			Name
+		</section>
+		<section class="right">
+			Visited
+		</section>
+	</section>
+</div>
+{{#each leaderboard}}
+<div class="card">
+	<section class="icon">
+		{{this.rank}}
+	</section>
+	<section class="main">
+		<section class="left">
+			{{this.username}}
+		</section>
+		<section class="right">
+			{{this.visited}}
+		</section>
+	</section>
+</div>
+{{/each}}

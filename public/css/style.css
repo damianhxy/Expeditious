@@ -63,7 +63,7 @@ header span{
 }
 
 .button.search{
-  right: 3em;
+  right: 4em;
 }
 
 .cardbox{
@@ -85,16 +85,16 @@ header span{
 .card.name{
 	position: relative;
 	margin-top: 2.5em;
-	padding-top: 6.5em;
+	padding-top: 13.5em;
 	text-align: center;
 }
 
 .card.name .img{
 	position: absolute;
 	top: -2em;
-	height: 8em;
-	width: 8em;
-	border-radius: 4em;
+	height: 15em;
+	width: 15em;
+	border-radius: 8em;
 	left: 0;
 	right: 0;
 	margin: auto;
@@ -108,9 +108,9 @@ header span{
 	font-weight: 700;
 	padding: 0 1em;
 	position: absolute;
-	top: 3.5em;
+	top: 9.5em;
 	height: 2em;
-	width: 9em;
+	width: 15em;
 	line-height: 2em;
 	left: 0;
 	right: 0;
@@ -213,7 +213,8 @@ header span{
 }
 
 .card .place{
-	padding-top: 1.2em;
+	padding-top:1.2em;
+	
 }
 
 .card.input{
@@ -280,10 +281,6 @@ header span{
 	transition: background-color 0.5s;
 }
 
-.link:hover{
-	background-color: rgba(231, 76, 60, 1.0);
-}
-
 .activitytitle{
 	font-family: 'Montserrat', sans-serif;
 	font-weight: 700;
@@ -309,14 +306,6 @@ header span{
 	transition:background-color 0.5s;
 }
 
-.floatbutton:hover{
-	background-color: rgba(231, 76, 60, 1.0);
-}
-
 #login{
 	transition:background-color 0.5s;
-}
-
-#login:hover{
-	background-color: rgba(231, 76, 60, 1.0);
 }

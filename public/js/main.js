@@ -15,10 +15,13 @@ window.onload = function() {
 		"mosque",
 		"museum",
 		"park",
+		"place_of_worship",
+		"point_of_interest",
 		"shopping_mall",
 		"stadium",
 		"synagogue",
 		"school",
+		"subway_station",
 		"university",
 		"zoo"
 	];
@@ -73,7 +76,11 @@ window.onload = function() {
 			case "church":
 			case "hindu_temple":
 			case "synagogue":
+			case "place_of_worship":
 				l = "group";
+				break;
+			case "subway_station":
+				l = "train"
 				break;
 		}
 
@@ -86,7 +93,6 @@ window.onload = function() {
 	}
 
 	function distance(lat1, long1, lat2, long2){
-		console.log(lat1,long1,lat2,long2);
 		var R = 6384469;
 		var dLat = rad(lat2-lat1);
 		var dLong = rad(long2-long1);
@@ -106,27 +112,12 @@ window.onload = function() {
 			d.innerHTML = "<i class='fa fa-frown-o'></i> GPS Unsupported";
 			d.style.background = "rgba(192, 57, 43, 1.0)";
 		}
-		if(document.body.dataset.user){
-			var x = new XMLHttpRequest();
-			x.onreadystatechange=function(){
-				if (x.readyState==4 && x.status==200){
-					var n = JSON.parse(x.responseText);
-					/*c = document.createDocumentFragment();
-					n.forEach(function(e){
-
-					});*/
-					console.log(n);
-				}
-			};
-			x.open("POST","/users/activity",true);
-			x.send();
-		}
 	}
 
 	function showPosition(position) {
 		lat = position.coords.latitude;
 		long = position.coords.longitude;
-		d.style.background = "url('http://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + long + "&zoom=14&size=" + d.offsetWidth + "x" + d.offsetHeight + "&sensor=false') center center no-repeat";
+		d.style.background = "url('http://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + long + "&zoom=14&size=" + d.offsetWidth + "x" + Math.round(d.offsetWidth*0.66) + "&sensor=false') center center no-repeat";
 		d.innerHTML = "";
 		if(lat&&long){
 			// Nearby Areas

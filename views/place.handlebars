@@ -1,6 +1,10 @@
 <div class="card name">
 	<div class="img" style="background-image: url('https://maps.googleapis.com/maps/api/place/photo?key={{key}}&photoreference={{photos location.photos}}&maxwidth=400')"></div>
-	{{#if user}}<div class="stamp {{visited user.visited location.name}}">{{visited user.visited location.name}}</div>{{/if}}
+	{{#if user}}
+	<div class="stamp {{visited user.visited location.name}}">{{visited user.visited location.name}}</div>
+	{{else}}
+	<div class="stamp NOT">NOT LOGGED IN</div>
+	{{/if}}
 	<h1>{{location.name}}</h1>
 	<p class="subinfo"><i class="fa fa-{{types location.types}}"></i> {{typename location.types}}</p>
 	{{#if location.formatted_address}}
@@ -39,3 +43,4 @@
 <div class="card map" data-lat="{{location.geometry.location.lat}}" data-long="{{location.geometry.location.lng}}">
 	<i class="fa fa-cog fa-spin"></i>
 </div>
+<script src="/js/map.js"></script>

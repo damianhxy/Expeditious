@@ -3,7 +3,7 @@ var nedb = require("nedb");
 var bcryptjs = require("bcryptjs");
 var users = new nedb({filename: "./database/users", autoload: true});
 
-exports.all = function() {
+var all = exports.all = function() {
     return Q.promise(function(resolve, reject, notify) {
         Q.ninvoke(users, "find", {})
         .then(function(list) {
@@ -51,8 +51,6 @@ exports.create = function(name, username, password, password2) {
                     "preferences": {
                         "radius": 500 // metres
                     },
-                    "wishlist": [],
-                    "following": [], // {userid}
                     "visited": [], // {id, name, time}
 					"joined": Date.now()
                 };
@@ -68,40 +66,30 @@ exports.create = function(name, username, password, password2) {
     });
 };
 
-exports.generateLeaderboard = function(id) {
+exports.generateLeaderboard = function() {
     return Q.promise(function(resolve, reject, notify) {
         var leaderboard = [];
-        Q.ninvoke(users, "findOne", { _id: id })
-        .then(function(user) {
-            var followers = [];
-            for (var follower in user.following)
-                followers.push(get(user.following[follower]));
-            return Q.all(followers);
-        })
-        .then(function(followers) {
-            for (var follower in followers)
-                leaderboard.push({
-                    username: followers[follower].username,
-                    visited: followers[follower].visited.length
-                });
-            leaderboard.push({
-                username: user.username,
-                visited: user.visited.length
-            });
-            leaderboard.sort(function(a, b) {
-                return b.visited - a.visited; // Higher comes first
-            });
-            leaderboard.map(function(e, i, a) {
+		all()
+		.then(function(users) {
+			for (var user in users)
+				leaderboard.push({
+					"username": users[user].username,
+					"visited": users[user].visited.length
+				});
+			leaderboard.sort(function(a, b) {
+				if (b.time !== a.time)
+					return b.time - a.time;
+				return a.username > b.username;
+			});
+			leaderboard.map(function(e, i, a) {
                 if (!i) e.rank = 1;
                 else e.rank = a[i - 1].rank + (e.visited != a[i - 1].visited);
             });
-        })
-        .then(function() {
-            resolve(leaderboard);
-        })
-        .fail(function(err) {
-            reject(err);
-        });
+			resolve(leaderboard);
+		})
+		.fail(function(err) {
+			reject(err);
+		});
     });
 };
 
@@ -110,26 +98,6 @@ var get = exports.get = function(id) {
         Q.ninvoke(users, "findOne", { _id: id })
         .then(function(user) {
             resolve(user);
-        })
-        .fail(function(err) {
-            reject(err);
-        });
-    });
-};
-
-exports.toggleFollow = function(userid, targetid) {
-    return Q.promise(function(resolve, reject, notify) {
-        Q.ninvoke(users, "findOne", { _id: userid })
-        .then(function(user) {
-            var location = user.following.indexOf(targetid);
-            if (~ location)
-                users.following.splice(location, 1);
-            else
-                users.following.push(userid);
-            return Q.ninvoke(users, "update", { _id: userid }, { $set: user });
-        })
-        .then(function() {
-            resolve();
         })
         .fail(function(err) {
             reject(err);
@@ -158,26 +126,6 @@ exports.addVisited = function(userid, locationid, time) {
             resolve();
         })
         .fail(function(err) {
-            reject(err);
-        });
-    });
-};
-
-exports.toggleWishlist = function(userid, locationid) {
-    return Q.promise(function(resolve, reject, notify) {
-        Q.ninvoke(users, "findOne", { _id: userid })
-        .then(function(user) {
-            var location = users.wishlist.indexOf(locationid);
-            if (~ location)
-                users.wishlist.push(locationid);
-            else
-                users.wishlist.splice(location, 1);
-            return Q.ninvoke(users, "update", { _id: userid }, { $set: user });
-        })
-        .then(function() {
-            resolve();
-        })
-        .fali(function(err) {
             reject(err);
         });
     });

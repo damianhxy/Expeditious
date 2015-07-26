@@ -5,10 +5,10 @@ window.onload = function() {
 		d.dataset.lat + 
 		"," + 
 		d.dataset.long + 
-		"&zoom=14&size=" + 
+		"&zoom=18&size=" + 
 		d.offsetWidth + 
 		"x" + 
-		d.offsetHeight + 
+		Math.round(d.offsetWidth*0.66) + 
 		"&sensor=false') center center no-repeat";
 	d.innerHTML = "";
 }

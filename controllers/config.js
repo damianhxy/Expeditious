@@ -69,7 +69,11 @@ module.exports = function(app, express) {
 					case "church":
 					case "hindu_temple":
 					case "synagogue":
+					case "place_of_worship":
 						l = "group";
+						break;
+					case "subway_station":
+						l = "train";
 						break;
 				}
 				return l;

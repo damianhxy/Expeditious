@@ -28,7 +28,7 @@ router.get("/:id", function(req, res, next) {
 	})
 	.then(function(info) {
 		d = info.query.pages[Object.keys(info.query.pages)[0]].extract;
-		if(d) d = d.split('.')[0] + '.' + d.split('.')[1] + '.';
+		if(d) d = d.split('. ')[0] + '. ' + d.split('. ')[1] + '.';
 		res.render("place", {
 			user: req.user,
             location: l,
@@ -54,26 +54,25 @@ router.post("/mark", function(req, res, next) {
 });
 
 router.post("/nearby", function(req, res, next) {
-	/*location.findNearby(req.body.lat, req.body.long, 50)
-    .then(function(response) {
-        var locations = [];
-        for (var loc in response.results)
-            locations.push(user.addVisited(req.user._id, response.results[loc].place_id, Date.now()));
-		console.log(locations);
-        Q.all(locations)
-        .then(function() {
-            /req.session.success = "Visited " + locations.length + " more places!";
-            return location.findNearby(req.body.lat, req.body.long, 1500);
-        });
-    })*/
-	location.findNearby(req.body.lat, req.body.long, 1500)
-    .then(function(response) {
-        res.send(response);
-    })
-    .fail(function(err) {
-        console.error(err);
-        res.status(400).end();
-    });
+	if (req.user)
+		location.markVisited(req.body.lat, req.body.long, req.user._id)
+		.then(Q.fcall(location.findNearby(req.body.lat, req.body.long, 1500)))
+		.then(function(response) {
+			res.send(response);
+		})
+		.fail(function(err) {
+			console.error(err);
+			res.status(400).end();
+		});
+	else
+		location.findNearby(req.body.lat, req.body.long, 1500)
+		.then(function(response) {
+			res.send(response);
+		})
+		.fail(function(err) {
+			console.error(err);
+			res.status(400).end();
+		});
 });
 
 router.post("/nearbyCarparks", function(req, res, next) {

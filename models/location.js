@@ -17,9 +17,11 @@ var placesTypes = exports.types = [
     "mosque",
 	"museum",
 	"park",
+	"place_of_worship",
 	"school",
     "shopping_mall",
 	"stadium",
+	"subway_station",
     "synagogue",
     "university",
     "zoo"
@@ -52,7 +54,7 @@ var nearby = exports.findNearby = function(lat, long, radius) {
     return Q.promise(function(resolve, reject, notify) {
         var host = "https://maps.googleapis.com";
         var path = "/maps/api/place/nearbysearch/json?";
-        path += "key=" + settings.API_KEY;
+        path += "key=" + "AIzaSyA0GajL1ztx1fvmk8jq7Lxf2jhQ9ZN5Qws";
         path += "&location=" + lat + "," + long;
         path += "&radius=" + radius;
         path += "&types=" + placesTypes.join("|");
@@ -91,7 +93,7 @@ exports.getPlace = function(id) {
     return Q.promise(function(resolve, reject, notify) {
         var host = "https://maps.googleapis.com";
         var path = "/maps/api/place/details/json?";
-        path += "key=" + settings.API_KEY;
+        path += "key=" + "AIzaSyA0GajL1ztx1fvmk8jq7Lxf2jhQ9ZN5Qws";
         path += "&placeid=" + id;
         request(host + path, function(error, response, body) {
             if (!error && response.statusCode === 200)
@@ -111,9 +113,11 @@ exports.markVisited = function(lat, long, userid) {
 			for (var location in res.results)
 				locations.push(user.addVisited(userid, res.results[location].place_id,now));
 			Q.all(locations)
-				.then(function() {
-					resolve(res.results.length);
-				});
+			.then(function() {
+				console.log("Added " + res.results.length + " locations to visited!");
+				console.info(res);
+				resolve(res.results.length);
+			});
 		})
 		.fail(function(err) {
 			reject(err);
@@ -143,7 +147,7 @@ exports.search = function(str) {
 	return Q.promise(function(resolve, reject, notify) {
 		var host = "https://maps.googleapis.com";
         var path = "/maps/api/place/nearbysearch/json?";
-        path += "key=" + settings.API_KEY;
+        path += "key=" + "AIzaSyA0GajL1ztx1fvmk8jq7Lxf2jhQ9ZN5Qws";
         path += "&location=" + 1.19 + "," + 103.805;
         path += "&radius=" + 25000;
         path += "&types=" + placesTypes.join("|");

@@ -2,8 +2,11 @@ var express = require("express");
 var router = express.Router();
 //var notification = require("../middlewares/notification.js");
 var location = require("../models/location.js");
+var settings = require("./settings.js");
+var moment = require("moment");
 //router.use(notification);
 var user = require("../models/user.js");
+var Q = require("q");
 
 /* Routes */
 router.use("/users", require("./users.js"));
@@ -15,17 +18,33 @@ router.get("/search", function(req, res, next) {
         title: "SEARCH",
         user: req.user,
         hot: [{
-            place_id: "ChIJ0QX_Brki2jER-pZKNdqk_a8",
+            place_id: "ChIJvWDbfRwa2jERgNnTOpAU3-o",
             types: ["park"],
-            description: "East Coast Park"
+            description: "Singapore Botanic Gardens"
         }, {
-            place_id: "ChIJMcwh6o0Z2jERNxsLqnSIvlw",
+            place_id: "ChIJnXwAOKAZ2jERAs-MHs1aDgI",
             types: ["shopping_mall"],
-            description: "ION Orchard"
+            description: "Clarke Quay"
         }, {
-            place_id: "ChIJHUH7GiY92jER6cr6vHkVWiA",
-            types: ["school"],
-            description: "ITE College East"
+            place_id: "ChIJx4wPggYZ2jERnT8vOV1XU5k",
+            types: ["shopping_mall"],
+            description: "The Shoppes at Marina Bay Sands"
+        }, {
+            place_id: "ChIJMxZ-kwQZ2jERdsqftXeWCWI",
+            types: ["park"],
+            description: "Gardens by the Bay"
+        }, {
+            place_id: "ChIJKaGsJKUZ2jERxa8yhKrdPfI",
+            types: ["library"],
+            description: "National Library"
+        }, {
+            place_id: "ChIJQ6MVplUZ2jERn1LmNH0DlDA",
+            types: ["amusement_park"],
+            description: "Universal Studios Singapore"
+        }, {
+            place_id: "ChIJO9cemPUQ2jERvlh8KtwhtAc",
+            types: ["park"],
+            description: "Bukit Timah Nature Reserve"
         }]
     });
 });
@@ -47,35 +66,38 @@ router.post("/search", function(req, res, next) {
 
 router.get("/", function(req, res, next) {
     if (req.user) {
-        var following = [], activities = [];
-        for (var followee in req.user.following) {
-            following.push(user.get(req.user.following[followee]));
-        }
-        Q.all(following)
-        .then(function(followers) {
-            var now = Date.now();
-            for (var follower in followers) {
-                followers[follower].visited.filter(function(e) {
-                    return now - e.time <= 86400000;
-                });
-                for (var visit in followers[follower].visited) {
-                    activities.push(followers[follower].visited[visit]);
-                }
-            }
-            activities.sort(function(a, b) { // Latest comes first
-                return b.time - a.time;
-            });
-            res.render("home", {
+        var activities = [];
+		var now = Date.now();
+        user.all()
+		.then(function(users) {
+			for (var user in users) {
+				users[user].visited.filter(function(e) {
+					return now - users[user].visited.time <= 86400000;
+				});
+				for (var activity in users[user].visited)
+					activities.push(users[user].visited[activity]);
+			}
+			activities.sort(function(a, b) {
+				return b.time - a.time;
+			});
+			activities.map(function(e) {
+				e.time = moment(e.time).format(settings.MOMENTJS_ACTIVITIY_FORMAT);
+			});
+			res.render("home", {
                 title: "EXPEDITIO",
                 user: req.user,
                 activities: activities
             });
-        });
+		})
+		.fail(function(err) {
+			console.error(err);
+			next(err);
+		});
     } else
-    res.render("home", {
-        title: "EXPEDITIO",
-        user: req.user
-    });
+		res.render("home", {
+			title: "EXPEDITIO",
+			user: req.user
+		});	
 });
 
 /* 404 & 500 */

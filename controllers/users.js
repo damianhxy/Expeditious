@@ -6,36 +6,29 @@ var user = require("../models/user.js");
 var settings = require("../controllers/settings.js");
 var moment = require("moment");
 
+router.get("/leaderboard", function(req, res, next) {
+    user.generateLeaderboard()
+    .then(function(response) {
+        res.render("leaderboards", {
+            title: "LEADERBOARD",
+            leaderboard: response
+        });
+    })
+    .fail(function(err) {
+        console.error(err);
+        next(err);
+    });
+});
+
 router.get("/login", function(req, res, next) {
     res.render("login", {
         title: "LOGIN"
     });
 });
 
-router.get("/profile", function(req, res, next) {
-      res.render({
-          title: "PROFILE",
-		  user: req.user
-      }) ;
-});
-
 router.get("/signup", function(req, res, next) {
     res.render("signup", {
         title: "SIGNUP"
-    });
-});
-
-router.get("/leaderboard", function(req, res, next) {
-    user.generateLeaderboard(req.user._id)
-    .then(function(res) {
-        res.render("leaderboard", {
-            title: "LEADERBOARD",
-            stats: res
-        });
-    })
-    .fail(function(err) {
-        console.error(err);
-        next(err);
     });
 });
 
@@ -49,7 +42,7 @@ router.post("/login", function(req, res, next) {
     passport.authenticate("local-signin", function(err, user, info) {
         if (err) return next(err);
         if (!user)
-            return res.status(400).redirect("/");
+            return res.status(400).redirect("/users/login");
         return req.login(user, function(err) {
             if (err) return next(err);
             res.redirect("/");
@@ -60,6 +53,8 @@ router.post("/login", function(req, res, next) {
 router.post("/signup", function(req, res, next) {
     passport.authenticate("local-signup", function(err, user, info) {
         if (err) return next(err);
+		if (!user)
+			return res.status(400).redirect("/users/signup");
         req.login(user, function(err) {
             if (err) return next(err);
             res.redirect("/");
@@ -81,6 +76,9 @@ router.get("/:id", function(req, res, next) {
 		user.visited.sort(function(a, b) { // Greater comes first
 			return b.time - a.time;
 		});
+		var isFollowing = false;
+		for (var followee in req.user.following)
+			if (req.user.following[followee] === user._id)
 		res.render("profile", {
 			title: "PROFILE",
 			user: req.user,

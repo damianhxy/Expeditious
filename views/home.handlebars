@@ -3,7 +3,7 @@
 	<i class="fa fa-cog fa-spin"></i>
 </div>
 <div class="card">
-    <p class="title">Nearby Locations</p>
+    <p class="title">Popular Nearby</p>
 	<div class="nearby">
 		<i class="fa fa-cog fa-spin"></i>
 	</div>
@@ -58,33 +58,17 @@
 </div-->
 <p class="activitytitle">- ACTIVITY -</p>
 {{#if user}}
-<div class="card activity" lat, long>
-	<section class="icon up">
-		<i class="fa fa-map-marker"></i>
-	</section>
-	<section class="main">
-		<span class="name">Sheyuan Yeo</span> visited <span class="name">Potato HQ</span>
-		<p class="subinfo">July 25 2015</p>
-	</section>
-</div>
+{{#each activities}}
 <div class="card activity">
 	<section class="icon up">
-		<i class="fa fa-map-marker"></i>
+		<i class="fa fa-map-marker"></o>
 	</section>
 	<section class="main">
-		<span class="name">Sheyuan Yeo</span> visited <span class="name">Potato HQ</span>
-		<p class="subinfo">July 25 2015</p>
+		<span class="name">{{this.userid}}</span> visited <span class="name">this.name</span>
+		<p class="subinfo">this.time</p>
 	</section>
 </div>
-<div class="card activity">
-	<section class="icon up">
-		<i class="fa fa-map-marker"></i>
-	</section>
-	<section class="main">
-		<span class="name">Sheyuan Yeo</span> visited <span class="name">Potato HQ</span>
-		<p class="subinfo">July 25 2015</p>
-	</section>
-</div>
+{{/each}}
 {{else}}
 <a href="/users/login">
 <div class="card">
@@ -98,5 +82,5 @@
 </a>
 {{/if}}
 <div class="floatbutton">
-	<i class="fa fa-flag"></i>
+	<i class="fa fa-crosshairs"></i>
 </div>
