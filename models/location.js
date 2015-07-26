@@ -3,12 +3,7 @@ var nedb = require("nedb");
 var request = require("request");
 var settings = require("../controllers/settings.js");
 var users = require("./user.js");
-/*
-    Carparks (HDB)
-    name: name
-    latitude: float
-    longtitude: float
-*/
+
 var placesTypes = exports.types = [
     "airport",
     "amusement_park",

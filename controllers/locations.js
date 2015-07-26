@@ -3,6 +3,21 @@ var passport = require("passport");
 var router = express.Router();
 var location = require("../models/location.js");
 
+function rad(x){
+    return x*Math.PI/180;
+}
+
+function distance(lat1, long1, lat2, long2){
+    console.log(lat1,long1,lat2,long2);
+    var R = 6384469;
+    var dLat = rad(lat2-lat1);
+    var dLong = rad(long2-long1);
+    var a = Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(rad(lat1))*Math.cos(rad(lat2))*Math.sin(dLong/2)*Math.sin(dLong/2);
+    var c  = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c;
+    return Math.ceil(d/10)*10;
+}
+
 router.get("/:id", function(req, res, next) {
     location.getPlace(req.params.id)
     .then(function(response) {
@@ -42,7 +57,12 @@ router.post("/nearby", function(req, res, next) {
 router.post("/nearbyCarparks", function(req, res, next) {
 	location.findNearbyCarparks(req.body.lat, req.body.long, /*req.user.preferences.radius*/ 1000)
 	.then(function(response) {
-        console.log(response);
+        response.d.map(function(e) {
+            e.Distance = distance(req.body.lat, req.body.long, e.Latitude, e.Longitude);
+        });
+        response.d.sort(function(a, b) {
+            return a.Distance - b.Distance;
+        });
 		res.send(response);
 	})
 	.fail(function(err) {
