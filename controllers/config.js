@@ -101,7 +101,7 @@ module.exports = function(app, express) {
 
     require("console-stamp")(console, settings.TIME_FORMAT);
     morgan.token("time", function(req, res) {
-        return require("console-stamp/node_modules/dateformat")(new Date(), settings.TIME_FORMAT);
+        return require("dateformat")(new Date(), settings.TIME_FORMAT);
     });
     app.use(morgan("[:time] :method :url :status :res[content-length] - :remote-addr - :response-time ms"));
 
