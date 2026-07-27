@@ -2,43 +2,12 @@ const axios = require("axios");
 const settings = require("../controllers/settings.js");
 
 const placesTypes = (exports.types = [
-  "airport",
-  "amusement_park",
-  "aquarium",
-  "art_gallery",
-  "casino",
-  "church",
-  "hindu_temple",
-  "hospital",
-  "library",
-  "mosque",
-  "museum",
-  "park",
-  "place_of_worship",
-  "school",
-  "shopping_mall",
-  "stadium",
-  "subway_station",
-  "synagogue",
-  "university",
-  "zoo",
+  "airport", "amusement_park", "aquarium", "art_gallery", "casino",
+  "church", "hindu_temple", "hospital", "library", "mosque",
+  "museum", "park", "place_of_worship", "point_of_interest",
+  "school", "shopping_mall", "stadium", "subway_station",
+  "synagogue", "university", "zoo",
 ]);
-
-exports.busCost = async function (startLat, startLong, endLat, endLong) {
-  const { data } = await axios.get("https://maps.googleapis.com/maps/api/directions/json", {
-    params: {
-      origin: startLat + "," + startLong,
-      destination: endLat + "," + endLong,
-      mode: "transit",
-      key: settings.API_KEY,
-    },
-  });
-  let totalCost = 0;
-  data.routes.forEach((e) => {
-    if (e.fare) totalCost += e.fare.value;
-  });
-  return totalCost;
-};
 
 const nearby = (exports.findNearby = async function (lat, long, radius) {
   const { data } = await axios.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json", {
@@ -76,9 +45,10 @@ exports.getPlace = async function (id) {
 exports.markVisited = async function (lat, long, userid) {
   const users = require("./user.js");
   const res = await nearby(lat, long, 50);
+  if (!res || !res.results || !Array.isArray(res.results)) return;
   const now = Date.now();
   res.results.forEach((result) => {
-    users.addVisited(userid, result.place_id, now);
+    users.addVisited(userid, result.place_id, result.name, now);
   });
 };
 

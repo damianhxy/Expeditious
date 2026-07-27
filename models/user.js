@@ -15,26 +15,30 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     location_id TEXT NOT NULL,
+    name TEXT DEFAULT '',
     visited_at INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE(user_id, location_id)
   );
 `);
 
+const tableInfo = db.pragma("table_info(visited)");
+if (!tableInfo.some((col) => col.name === "name")) {
+  db.exec("ALTER TABLE visited ADD COLUMN name TEXT DEFAULT ''");
+}
+
 const PUBLIC_FIELDS = "id, name, username, preferences, joined";
 
 const stmts = {
-  insertUser: db.prepare(
-    "INSERT INTO users (name, username, hash, salt, joined) VALUES (?, ?, ?, ?, ?)",
-  ),
+  insertUser: db.prepare("INSERT INTO users (name, username, hash, salt, joined) VALUES (?, ?, ?, ?, ?)"),
   findUserByUsername: db.prepare(`SELECT ${PUBLIC_FIELDS}, hash FROM users WHERE username = ?`),
   findUserById: db.prepare(`SELECT ${PUBLIC_FIELDS} FROM users WHERE id = ?`),
   allUsers: db.prepare(`SELECT ${PUBLIC_FIELDS} FROM users`),
   insertVisited: db.prepare(
-    "INSERT OR IGNORE INTO visited (user_id, location_id, visited_at) VALUES (?, ?, ?)",
+    "INSERT OR IGNORE INTO visited (user_id, location_id, name, visited_at) VALUES (?, ?, ?, ?)",
   ),
   getVisitedByUser: db.prepare(
-    "SELECT location_id, visited_at FROM visited WHERE user_id = ? ORDER BY visited_at DESC",
+    "SELECT location_id, name, visited_at FROM visited WHERE user_id = ? ORDER BY visited_at DESC",
   ),
   countVisitedByUser: db.prepare("SELECT user_id, COUNT(*) as count FROM visited GROUP BY user_id"),
 };
@@ -42,6 +46,7 @@ const stmts = {
 function attachVisited(user) {
   user.visited = stmts.getVisitedByUser.all(user.id).map((v) => ({
     id: v.location_id,
+    name: v.name,
     time: v.visited_at,
   }));
   return user;
@@ -103,6 +108,6 @@ exports.get = async function (id) {
   return attachVisited(user);
 };
 
-exports.addVisited = function (userid, locationid, time) {
-  stmts.insertVisited.run(userid, locationid, time);
+exports.addVisited = function (userid, locationid, name, time) {
+  stmts.insertVisited.run(userid, locationid, name || "", time);
 };

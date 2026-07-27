@@ -19,11 +19,19 @@ function distance(lat1, long1, lat2, long2) {
   return Math.ceil((R * c) / 10) * 10;
 }
 
+function isCoords(v) {
+  return v !== "" && v !== null && v !== undefined && !isNaN(Number(v));
+}
+
 router.get("/:id", async (req, res, next) => {
   try {
     const response = await location.getPlace(req.params.id);
     const placeData = response.result;
     let desc = "";
+    let openingHours = [];
+    if (placeData.opening_hours && Array.isArray(placeData.opening_hours.weekday_text)) {
+      openingHours = placeData.opening_hours.weekday_text;
+    }
     try {
       const info = await location.getInfo(placeData.name);
       const pages = info.query.pages;
@@ -38,6 +46,7 @@ router.get("/:id", async (req, res, next) => {
     res.render("place", {
       user: req.user,
       location: placeData,
+      openingHours,
       key: settings.API_KEY,
       desc,
     });
@@ -48,8 +57,11 @@ router.get("/:id", async (req, res, next) => {
 });
 
 router.post("/mark", auth, async (req, res) => {
+  if (!isCoords(req.body.lat) || !isCoords(req.body.long)) {
+    return res.status(400).send("Invalid coordinates.");
+  }
   try {
-    await location.markVisited(req.body.lat, req.body.long, req.user.id);
+    await location.markVisited(Number(req.body.lat), Number(req.body.long), req.user.id);
     res.send("ok");
   } catch (err) {
     console.error(err);
@@ -58,8 +70,11 @@ router.post("/mark", auth, async (req, res) => {
 });
 
 router.post("/nearby", async (req, res) => {
+  if (!isCoords(req.body.lat) || !isCoords(req.body.long)) {
+    return res.status(400).send("Invalid coordinates.");
+  }
   try {
-    const response = await location.findNearby(req.body.lat, req.body.long, 1500);
+    const response = await location.findNearby(Number(req.body.lat), Number(req.body.long), 1500);
     res.send(response);
   } catch (err) {
     console.error(err);
@@ -68,10 +83,13 @@ router.post("/nearby", async (req, res) => {
 });
 
 router.post("/nearbyCarparks", async (req, res) => {
+  if (!isCoords(req.body.lat) || !isCoords(req.body.long)) {
+    return res.status(400).send("Invalid coordinates.");
+  }
   try {
-    const response = await location.findNearbyCarparks(req.body.lat, req.body.long, 1000);
+    const response = await location.findNearbyCarparks(Number(req.body.lat), Number(req.body.long), 1000);
     response.d.forEach((e) => {
-      e.Distance = distance(req.body.lat, req.body.long, e.Latitude, e.Longitude);
+      e.Distance = distance(Number(req.body.lat), Number(req.body.long), e.Latitude, e.Longitude);
     });
     response.d.sort((a, b) => a.Distance - b.Distance);
     res.send(response);

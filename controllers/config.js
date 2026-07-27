@@ -16,18 +16,8 @@ const db = require("../database");
 function formatDate(date) {
   const pad = (n) => (n < 10 ? "0" + n : "" + n);
   const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
   ];
   const d = new Date(date);
   const day = d.getDate();
@@ -37,30 +27,11 @@ function formatDate(date) {
   const ampm = hours >= 12 ? "PM" : "AM";
   const h12 = hours % 12 || 12;
   return (
-    day +
-    suffix +
-    " " +
-    months[d.getMonth()] +
-    " " +
-    pad(h12) +
-    ":" +
-    pad(d.getMinutes()) +
-    " " +
-    ampm
+    day + suffix + " " + months[d.getMonth()] + " " + pad(h12) + ":" + pad(d.getMinutes()) + " " + ampm
   );
 }
 
-function escapeHtml(str) {
-  if (!str) return "";
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-module.exports = function (app, express, _authLimiter) {
+module.exports = function (app, express) {
   const hbs = exphbs.create({
     defaultLayout: "default",
     helpers: {
@@ -81,58 +52,26 @@ module.exports = function (app, express, _authLimiter) {
         for (; a < arr.length && location.types.indexOf(arr[a]) === -1; a++);
         if (a >= arr.length) return l;
         switch (arr[a]) {
-          case "airport":
-            l = "plane";
-            break;
-          case "amusement_park":
-            l = "space-shuttle";
-            break;
-          case "aquarium":
-            l = "anchor";
-            break;
-          case "art_gallery":
-            l = "paint-brush";
-            break;
-          case "casino":
-            l = "money";
-            break;
-          case "hospital":
-            l = "ambulance";
-            break;
-          case "library":
-            l = "book";
-            break;
-          case "museum":
-            l = "institution";
-            break;
-          case "park":
-            l = "tree";
-            break;
-          case "shopping_mall":
-            l = "building";
-            break;
-          case "stadium":
-            l = "soccer-ball-o";
-            break;
+          case "airport":         l = "plane"; break;
+          case "amusement_park":  l = "space-shuttle"; break;
+          case "aquarium":        l = "anchor"; break;
+          case "art_gallery":     l = "paint-brush"; break;
+          case "casino":          l = "money"; break;
+          case "hospital":        l = "ambulance"; break;
+          case "library":         l = "book"; break;
+          case "museum":          l = "institution"; break;
+          case "park":            l = "tree"; break;
+          case "shopping_mall":   l = "building"; break;
+          case "stadium":         l = "soccer-ball-o"; break;
           case "school":
-          case "university":
-            l = "graduation-cap";
-            break;
-          case "zoo":
-            l = "paw";
-            break;
-          case "mosque":
-            l = "moon-o";
-            break;
+          case "university":      l = "graduation-cap"; break;
+          case "zoo":             l = "paw"; break;
+          case "mosque":          l = "moon-o"; break;
           case "church":
           case "hindu_temple":
           case "synagogue":
-          case "place_of_worship":
-            l = "group";
-            break;
-          case "subway_station":
-            l = "train";
-            break;
+          case "place_of_worship": l = "group"; break;
+          case "subway_station":  l = "train"; break;
         }
         return l;
       },
@@ -145,18 +84,9 @@ module.exports = function (app, express, _authLimiter) {
         d = d.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
         return d;
       },
-      list(arr) {
-        return arr ? arr.join(",") : "";
-      },
       photos(arr) {
         if (arr && arr.length > 0) return arr[Math.min(2, arr.length - 1)].photo_reference;
         return "";
-      },
-      formatDate(date) {
-        return formatDate(date);
-      },
-      escapeHtml(str) {
-        return escapeHtml(str);
       },
     },
   });
@@ -165,9 +95,7 @@ module.exports = function (app, express, _authLimiter) {
 
   require("console-stamp")(console, settings.TIME_FORMAT);
   morgan.token("time", () => formatDate(new Date()));
-  app.use(
-    morgan("[:time] :method :url :status :res[content-length] - :remote-addr - :response-time ms"),
-  );
+  app.use(morgan("[:time] :method :url :status :res[content-length] - :remote-addr - :response-time ms"));
 
   app.use(cookieParser(settings.SECRET));
   app.use(express.urlencoded({ extended: false }));
@@ -180,15 +108,8 @@ module.exports = function (app, express, _authLimiter) {
       secret: settings.SECRET,
       saveUninitialized: false,
       resave: false,
-      cookie: {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: isProduction,
-      },
-      store: new SQLiteStore({
-        client: db,
-        expired: { clear: true, intervalMs: 900000 },
-      }),
+      cookie: { httpOnly: true, sameSite: "lax", secure: isProduction },
+      store: new SQLiteStore({ client: db, expired: { clear: true, intervalMs: 900000 } }),
     }),
   );
 

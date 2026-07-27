@@ -16,6 +16,8 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+require("./controllers/config.js")(app, express);
+
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
@@ -23,8 +25,9 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
   message: "Too many attempts, please try again later.",
 });
+app.use("/users/login", authLimiter);
+app.use("/users/signup", authLimiter);
 
-require("./controllers/config.js")(app, express, authLimiter);
 app.use(require("./controllers/routes.js"));
 
 app.listen(settings.PORT);
