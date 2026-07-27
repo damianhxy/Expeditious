@@ -1,8 +1,14 @@
-exports.PORT = 8080;
-exports.SECRET = "shortcircuit";
+exports.PORT = process.env.PORT || 8080;
+exports.SECRET = process.env.SESSION_SECRET;
+if (!exports.SECRET) {
+  console.error(
+    "FATAL: SESSION_SECRET environment variable is not set. Generate one with: node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
+  );
+  process.exit(1);
+}
 exports.TIME_FORMAT = "dd mmm HH:MM:ss";
 exports.MOMENTJS_JOINED_FORMAT = "Do MMMM YYYY";
-exports.MOMENTJS_ACTIVITY_FORMAT = "Do MMM h:m A";
-exports.ACCOUNT_KEY = "3dBMKkS+U1bne5HcRqF8LQ==";
-exports.UniqueUserID = "4e43e02f-7bdf-422f-b618-5555ae9749c0";
-exports.API_KEY = "AIzaSyCPmDU6sjqn1z2s1SReQIXNBE8rdwv1sdw";
+exports.MOMENTJS_ACTIVITY_FORMAT = "Do MMM h:mm A";
+exports.ACCOUNT_KEY = process.env.LTA_ACCOUNT_KEY || "";
+exports.UniqueUserID = process.env.LTA_USER_ID || "";
+exports.API_KEY = process.env.GOOGLE_API_KEY || "";

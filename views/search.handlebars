@@ -1,36 +1,45 @@
 <form action="/search" method="POST">
-    <div class="card search">
-        <input type="text" placeholder="Search" class="text" name="search">
-    	<button type="submit"><i class="fa fa-search"></i></button>
-	</div>
+  <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+  <div class="card search">
+    <input
+      type="text"
+      placeholder="Search"
+      class="text"
+      name="search"
+      required
+      minlength="1"
+      maxlength="100"
+    />
+    <button type="submit"><i class="fa fa-search"></i></button>
+  </div>
 </form>
 {{#if response}}
-{{#each response.results}}
-<a href="/locations/{{this.place_id}}">
-<div class="card">
-	<section class="icon">
-		<i class="fa fa-{{types this.types}}"></i>
-	</section>
-	<section class="main">
-		<p>{{this.name}}</p>
-	</section>
-</div>
-</a>
-{{/each}}
-{{else}}
-<div class="card">
-    <p class="title">Celebrate SG50!</p>
-    {{#each hot}}
-	<a href="/locations/{{this.place_id}}">
-	<section class="place">
+  {{#each response.results}}
+    <a href="/locations/{{this.place_id}}">
+      <div class="card">
         <section class="icon">
-            <i class="fa fa-{{types this.types}}"></i>
+          <i class="fa fa-{{types this.types}}"></i>
         </section>
         <section class="main">
-			<p>{{this.description}}</p>
+          <p>{{this.name}}</p>
         </section>
-    </section>
-	</a>
-	{{/each}}
-</div>
+      </div>
+    </a>
+  {{/each}}
+{{else}}
+  <div class="card">
+    <p class="title">Celebrate SG50!</p>
+    {{#each hot}}
+      <a href="/locations/{{this.place_id}}">
+        <section class="place">
+          <section class="icon">
+            <i class="fa fa-{{types this.types}}"></i>
+          </section>
+          <section class="main">
+            <p>{{this.description}}</p>
+          </section>
+        </section>
+      </a>
+    {{/each}}
+  </div>
 {{/if}}

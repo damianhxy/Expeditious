@@ -1,176 +1,253 @@
-var bodyParser = require("body-parser");
-var user = require("../models/user.js");
-var morgan = require("morgan");
-var passport = require("passport");
-var cookieParser = require("cookie-parser");
-var settings = require("./settings.js");
-var session = require("express-session");
-var exphbs = require("express-handlebars");
-var localStrategy = require("passport-local");
-var location = require("../models/location.js");
+const passport = require("passport");
+const localStrategy = require("passport-local");
+const session = require("express-session");
+const exphbs = require("express-handlebars");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const SQLiteStore = require("better-sqlite3-session-store")(session);
+const { csrfSync } = require("csrf-sync");
+const csrf = csrfSync();
+const settings = require("./settings.js");
+const userModel = require("../models/user.js");
+const location = require("../models/location.js");
+const notification = require("../middlewares/notification.js");
+const db = require("../database");
 
-module.exports = function(app, express) {
-    var hbs = exphbs.create({
-        defaultLayout: "default",
-        helpers: {
-            visited: function(arr1, check) {
-				return ~arr1.indexOf(check) ? "VISITED" : "NOT VISITED" ;
-			},
-			length: function(arr) {
-				return arr.length;
-			},
-			types: function(arr) {
-				var a = 0, l;
-				for(; a < arr.length && ! ~ location.types.indexOf(arr[a]); a++);
-				switch(arr[a]) {
-					case "airport":
-						l = "plane";
-						break;
-					case "amusement_park":
-						l = "space-shuttle";
-						break;
-					case "aquarium":
-						l = "anchor";
-						break;
-					case "art_gallery":
-						l = "paint-brush";
-						break;
-					case "casino":
-						l = "money";
-						break;
-					case "hospital":
-						l = "ambulance";
-						break;
-					case "library":
-						l = "book";
-						break;
-					case "museum":
-						l = "institution";
-						break;
-					case "park":
-						l = "tree";
-						break;
-					case "shopping_mall":
-						l = "building";
-						break;
-					case "stadium":
-						l = "soccer-ball-o";
-						break;
-					case "school":
-					case "university":
-						l = "graduation-cap";
-						break;
-					case "zoo":
-						l = "paw";
-						break;
-					case "mosque":
-						l = "moon-o";
-						break;
-					case "church":
-					case "hindu_temple":
-					case "synagogue":
-					case "place_of_worship":
-						l = "group";
-						break;
-					case "subway_station":
-						l = "train";
-						break;
-				}
-				return l;
-			},
-			typename: function(arr) {
-				var a = 0, d;
-				for(; a < arr.length && ! ~ location.types.indexOf(arr[a]); a++);
-				d = arr[a];
-				d = d.replace("_"," ");
-				//titlecase
-				d = d.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-				return d;
-			},
-			list: function(arr) {
-				return arr.join(',');
-			},
-			photos: function(arr){
-				if(arr) return arr[Math.min(2,arr.length - 1)].photo_reference;
-				else return 0;
-			}
+function formatDate(date) {
+  const pad = (n) => (n < 10 ? "0" + n : "" + n);
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const d = new Date(date);
+  const day = d.getDate();
+  const suffix =
+    ["th", "st", "nd", "rd"][day % 100 > 10 && day % 100 < 14 ? 0 : Math.min(day % 10, 3)] || "th";
+  const hours = d.getHours();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const h12 = hours % 12 || 12;
+  return (
+    day +
+    suffix +
+    " " +
+    months[d.getMonth()] +
+    " " +
+    pad(h12) +
+    ":" +
+    pad(d.getMinutes()) +
+    " " +
+    ampm
+  );
+}
+
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+module.exports = function (app, express, _authLimiter) {
+  const hbs = exphbs.create({
+    defaultLayout: "default",
+    helpers: {
+      visited(visitedArr, placeId) {
+        if (!visitedArr || !Array.isArray(visitedArr)) return "NOT VISITED";
+        for (let i = 0; i < visitedArr.length; i++) {
+          if (visitedArr[i].id === placeId) return "VISITED";
         }
-    });
-
-    app.use(express.static("public"));
-
-    require("console-stamp")(console, settings.TIME_FORMAT);
-    morgan.token("time", function(req, res) {
-        return require("dateformat")(new Date(), settings.TIME_FORMAT);
-    });
-    app.use(morgan("[:time] :method :url :status :res[content-length] - :remote-addr - :response-time ms"));
-
-    // Middleware
-    app.use(cookieParser(settings.SECRET));
-    app.use(bodyParser.urlencoded({ extended: false }));
-    app.use(bodyParser.json());
-    app.use(session({
-        secret: settings.SECRET,
-        saveUninitialized: true,
-        resave: true
-    }));
-    app.use(passport.initialize());
-    app.use(passport.session());
-
-    // Strategies
-    passport.use("local-signin", new localStrategy(
-        { passReqToCallback: true },
-        function(req, username, password, done) {
-            return user.authenticate(username, password)
-            .then(function(user) {
-                console.info("Signed in " + user.username);
-                // req.session.success = "Welcome back, " + user.username + ".";
-                done(null, user);
-            })
-            .fail(function(err) {
-                console.error(err.stack);
-                req.session.error = err.message;
-                done(null, false);
-            });
+        return "NOT VISITED";
+      },
+      length(arr) {
+        return arr ? arr.length : 0;
+      },
+      types(arr) {
+        if (!arr || !arr.length) return "map-marker";
+        let a = 0;
+        let l = "map-marker";
+        for (; a < arr.length && location.types.indexOf(arr[a]) === -1; a++);
+        if (a >= arr.length) return l;
+        switch (arr[a]) {
+          case "airport":
+            l = "plane";
+            break;
+          case "amusement_park":
+            l = "space-shuttle";
+            break;
+          case "aquarium":
+            l = "anchor";
+            break;
+          case "art_gallery":
+            l = "paint-brush";
+            break;
+          case "casino":
+            l = "money";
+            break;
+          case "hospital":
+            l = "ambulance";
+            break;
+          case "library":
+            l = "book";
+            break;
+          case "museum":
+            l = "institution";
+            break;
+          case "park":
+            l = "tree";
+            break;
+          case "shopping_mall":
+            l = "building";
+            break;
+          case "stadium":
+            l = "soccer-ball-o";
+            break;
+          case "school":
+          case "university":
+            l = "graduation-cap";
+            break;
+          case "zoo":
+            l = "paw";
+            break;
+          case "mosque":
+            l = "moon-o";
+            break;
+          case "church":
+          case "hindu_temple":
+          case "synagogue":
+          case "place_of_worship":
+            l = "group";
+            break;
+          case "subway_station":
+            l = "train";
+            break;
         }
-    ));
+        return l;
+      },
+      typename(arr) {
+        if (!arr || !arr.length) return "Unknown";
+        let a = 0;
+        for (; a < arr.length && location.types.indexOf(arr[a]) === -1; a++);
+        if (a >= arr.length) return "Unknown";
+        let d = arr[a].replace(/_/g, " ");
+        d = d.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
+        return d;
+      },
+      list(arr) {
+        return arr ? arr.join(",") : "";
+      },
+      photos(arr) {
+        if (arr && arr.length > 0) return arr[Math.min(2, arr.length - 1)].photo_reference;
+        return "";
+      },
+      formatDate(date) {
+        return formatDate(date);
+      },
+      escapeHtml(str) {
+        return escapeHtml(str);
+      },
+    },
+  });
 
-    passport.use("local-signup", new localStrategy(
-        { passReqToCallback: true },
-        function(req, username, password, done) {
-            return user.create(req.body.name, username, password, req.body.password2)
-            .then(function(user) {
-                console.info("Signed up " + user.username);
-                // req.session.success = "Welcome, " + user.username + ".";
-                done(null, user);
-            })
-            .fail(function(err) {
-                console.error(err.stack);
-                req.session.error = err.message;
-                done(null, false);
-            });
-        }
-    ));
+  app.use(express.static("public"));
 
-    // Serialization
-    passport.serializeUser(function(user, done) {
-        done(null, user._id);
-    });
+  require("console-stamp")(console, settings.TIME_FORMAT);
+  morgan.token("time", () => formatDate(new Date()));
+  app.use(
+    morgan("[:time] :method :url :status :res[content-length] - :remote-addr - :response-time ms"),
+  );
 
-    passport.deserializeUser(function(id, done) {
-        user.get(id)
-        .then(function(user) {
-            done(null, user);
-        })
-        .fail(function(err) {
-            done(err, false);
-        });
-    });
+  app.use(cookieParser(settings.SECRET));
+  app.use(express.urlencoded({ extended: false }));
+  app.use(express.json());
 
-    // Settings
-    app.enable("case sensitive routing");
-    app.enable("strict routing");
-    app.disable("x-powered-by");
-    app.engine("handlebars", hbs.engine);
-    app.set("view engine", "handlebars");
+  const isProduction = app.get("env") === "production";
+
+  app.use(
+    session({
+      secret: settings.SECRET,
+      saveUninitialized: false,
+      resave: false,
+      cookie: {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: isProduction,
+      },
+      store: new SQLiteStore({
+        client: db,
+        expired: { clear: true, intervalMs: 900000 },
+      }),
+    }),
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use(notification);
+
+  app.use(csrf.csrfSynchronisedProtection);
+  app.use((req, res, next) => {
+    if (req.method === "GET") {
+      res.locals.csrfToken = csrf.generateToken(req);
+    }
+    next();
+  });
+
+  passport.use(
+    "local-signin",
+    new localStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
+      try {
+        const user = await userModel.authenticate(username, password);
+        console.info("Signed in " + user.username);
+        done(null, user);
+      } catch (err) {
+        console.error(err.stack || err.message);
+        req.session.error = err.message;
+        done(null, false);
+      }
+    }),
+  );
+
+  passport.use(
+    "local-signup",
+    new localStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
+      try {
+        const user = await userModel.create(req.body.name, username, password, req.body.password2);
+        console.info("Signed up " + user.username);
+        done(null, user);
+      } catch (err) {
+        console.error(err.stack || err.message);
+        req.session.error = err.message;
+        done(null, false);
+      }
+    }),
+  );
+
+  passport.serializeUser((user, done) => done(null, user.id));
+
+  passport.deserializeUser(async (id, done) => {
+    try {
+      const user = await userModel.get(id);
+      done(null, user);
+    } catch (err) {
+      done(err, false);
+    }
+  });
+
+  app.enable("case sensitive routing");
+  app.enable("strict routing");
+  app.disable("x-powered-by");
+  app.engine("handlebars", hbs.engine);
+  app.set("view engine", "handlebars");
 };

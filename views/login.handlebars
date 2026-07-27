@@ -1,12 +1,30 @@
 <form action="/users/login" method="POST">
-    <div class="card input">
-        <input type="text" placeholder="Username" class="text" name="username">
-    </div>
-    <div class="card input">
-        <input type="password" placeholder="Password" class="text" name="password">
-    </div>
-    <div class="card input link">
-    <input type="submit" value="LOGIN" id="login">
-    </div>
-    <a href="signup"><div class="card link">SIGN UP</div></a>
+  <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+  <div class="card input">
+    <input
+      type="text"
+      placeholder="Username"
+      class="text"
+      name="username"
+      required
+      minlength="3"
+      maxlength="30"
+      autocomplete="username"
+    />
+  </div>
+  <div class="card input">
+    <input
+      type="password"
+      placeholder="Password"
+      class="text"
+      name="password"
+      required
+      minlength="6"
+      autocomplete="current-password"
+    />
+  </div>
+  <div class="card input link">
+    <input type="submit" value="LOGIN" id="login" />
+  </div>
+  <a href="/users/signup"><div class="card link">SIGN UP</div></a>
 </form>

@@ -1,14 +1,17 @@
-window.onload = function() {
-	var d = document.querySelector(".card.map");
-	if(d) d.style.minHeight = d.offsetWidth*0.66 + "px";
-	d.style.background = "url('http://maps.googleapis.com/maps/api/staticmap?center=" +
-		d.dataset.lat + 
-		"," + 
-		d.dataset.long + 
-		"&zoom=18&size=" + 
-		d.offsetWidth + 
-		"x" + 
-		Math.round(d.offsetWidth*0.66) + 
-		"&sensor=false') center center no-repeat";
-	d.innerHTML = "";
+"use strict";
+
+const map = document.querySelector(".card.map");
+if (map) {
+  map.style.minHeight = map.offsetWidth * 0.66 + "px";
+  map.style.background =
+    "url('https://maps.googleapis.com/maps/api/staticmap?center=" +
+    map.dataset.lat +
+    "," +
+    map.dataset.long +
+    "&zoom=18&size=" +
+    map.offsetWidth +
+    "x" +
+    Math.round(map.offsetWidth * 0.66) +
+    "&sensor=false') center center no-repeat";
+  map.innerHTML = "";
 }

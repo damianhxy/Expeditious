@@ -1,53 +1,57 @@
 <script src="/js/main.js"></script>
 <div class="card map">
-	<i class="fa fa-cog fa-spin"></i>
+  <i class="fa fa-cog fa-spin"></i>
 </div>
 <div class="card">
-    <p class="title">Popular Nearby</p>
-	<div class="nearby">
-		<i class="fa fa-cog fa-spin"></i>
-	</div>
+  <p class="title">Popular Nearby</p>
+  <div class="nearby">
+    <i class="fa fa-cog fa-spin"></i>
+  </div>
 </div>
 <div class="card">
-    <p class="title">Nearby Carparks</p>
-	<div class="nearby">
-		<i class="fa fa-cog fa-spin"></i>
-	</div>
+  <p class="title">Nearby Carparks</p>
+  <div class="nearby">
+    <i class="fa fa-cog fa-spin"></i>
+  </div>
 </div>
 <p class="activitytitle">- ACTIVITY -</p>
 {{#if user}}
-<div class="card activity">
-	<section class="icon up">
-		<i class="fa fa-map-marker"></i>
-	</section>
-	<section class="main">
-		<span class="name">USER</span> visited <span class="name">PLACE</span>
-		<p class="subinfo">25th July 2015</p>
-	</section>
-</div>
-{{#each activities}}
-<div class="card activity">
-	<section class="icon up">
-		<i class="fa fa-map-marker"></i>
-	</section>
-	<section class="main">
-		<span class="name">{{this.userid}}</span> visited <span class="name">this.name</span>
-		<p class="subinfo">this.time</p>
-	</section>
-</div>
-{{/each}}
+  {{#if activities.length}}
+    {{#each activities}}
+      <div class="card activity">
+        <section class="icon up">
+          <i class="fa fa-map-marker"></i>
+        </section>
+        <section class="main">
+          <span class="name">{{this.username}}</span>
+          visited
+          <span class="name">{{this.locationId}}</span>
+          <p class="subinfo">{{this.timeFormatted}}</p>
+        </section>
+      </div>
+    {{/each}}
+  {{else}}
+    <div class="card activity">
+      <section class="icon up">
+        <i class="fa fa-map-marker"></i>
+      </section>
+      <section class="main">
+        No recent activity
+      </section>
+    </div>
+  {{/if}}
 {{else}}
-<a href="/users/login">
-<div class="card">
-	<section class="icon">
-		<i class="fa fa-frown-o"></i>
-	</section>
-	<section class="main">
-		Login to see activity
-	</section>
-</div>
-</a>
+  <a href="/users/login">
+    <div class="card">
+      <section class="icon">
+        <i class="fa fa-frown-o"></i>
+      </section>
+      <section class="main">
+        Login to see activity
+      </section>
+    </div>
+  </a>
 {{/if}}
 <div class="floatbutton">
-	<i class="fa fa-crosshairs"></i>
+  <i class="fa fa-crosshairs"></i>
 </div>

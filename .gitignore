@@ -1,1 +1,9 @@
-node_modules/bcryptjs/*
+node_modules/
+.env
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+*.log
+.DS_Store
+nedb_sessionstore/

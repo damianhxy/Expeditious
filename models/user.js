@@ -1,132 +1,108 @@
-var Q = require("q");
-var nedb = require("nedb");
-var bcryptjs = require("bcryptjs");
-var users = new nedb({filename: "./database/users", autoload: true});
+const bcryptjs = require("bcryptjs");
+const db = require("../database");
 
-var all = exports.all = function() {
-    return Q.promise(function(resolve, reject, notify) {
-        Q.ninvoke(users, "find", {})
-        .then(function(list) {
-            resolve(list);
-        })
-        .fail(function(err) {
-            reject(err);
-        });
-    });
+db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    username TEXT NOT NULL UNIQUE,
+    hash TEXT NOT NULL,
+    salt TEXT NOT NULL,
+    preferences TEXT NOT NULL DEFAULT '{"radius":500}',
+    joined INTEGER NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS visited (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    location_id TEXT NOT NULL,
+    visited_at INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE(user_id, location_id)
+  );
+`);
+
+const PUBLIC_FIELDS = "id, name, username, preferences, joined";
+
+const stmts = {
+  insertUser: db.prepare(
+    "INSERT INTO users (name, username, hash, salt, joined) VALUES (?, ?, ?, ?, ?)",
+  ),
+  findUserByUsername: db.prepare(`SELECT ${PUBLIC_FIELDS}, hash FROM users WHERE username = ?`),
+  findUserById: db.prepare(`SELECT ${PUBLIC_FIELDS} FROM users WHERE id = ?`),
+  allUsers: db.prepare(`SELECT ${PUBLIC_FIELDS} FROM users`),
+  insertVisited: db.prepare(
+    "INSERT OR IGNORE INTO visited (user_id, location_id, visited_at) VALUES (?, ?, ?)",
+  ),
+  getVisitedByUser: db.prepare(
+    "SELECT location_id, visited_at FROM visited WHERE user_id = ? ORDER BY visited_at DESC",
+  ),
+  countVisitedByUser: db.prepare("SELECT user_id, COUNT(*) as count FROM visited GROUP BY user_id"),
 };
 
-exports.authenticate = function(username, password) {
-    return Q.promise(function(resolve, reject, notify) {
-        Q.ninvoke(users, "findOne", { username: username })
-        .then(function(user) {
-            if (!user) return reject(Error("User does not exist."));
-            Q.ninvoke(bcryptjs, "compare", password, user.hash)
-            .then(function(res) {
-                if (res) return resolve(user);
-                reject(Error("Wrong Password"));
-            });
-        })
-        .fail(function(err) {
-            reject(err);
-        });
-    });
+function attachVisited(user) {
+  user.visited = stmts.getVisitedByUser.all(user.id).map((v) => ({
+    id: v.location_id,
+    time: v.visited_at,
+  }));
+  return user;
+}
+
+exports.all = async function () {
+  return stmts.allUsers.all().map(attachVisited);
 };
 
-exports.create = function(name, username, password, password2) {
-    return Q.promise(function(resolve, reject, notify) {
-        if (password !== password2) return reject(Error("Password mismatch."));
-        Q.ninvoke(users, "findOne", { username: username })
-        .then(function(user) {
-            if (user) return reject(Error("User already exists."));
-            return Q.nfcall(bcryptjs.genSalt, 10);
-        })
-        .then(function(salt) {
-            return Q.nfcall(bcryptjs.hash, password, salt)
-            .then(function(hash) {
-                var user = {
-                    "name": name,
-                    "username": username,
-                    "hash": hash,
-                    "salt": salt,
-                    "preferences": {
-                        "radius": 500 // metres
-                    },
-                    "visited": [], // {id, name, time}
-					"joined": Date.now()
-                };
-                return Q.ninvoke(users, "insert", user);
-            });
-        })
-        .then(function(user) {
-            resolve(user);
-        })
-        .fail(function(err) {
-            reject(err);
-        });
-    });
+exports.authenticate = async function (username, password) {
+  const user = stmts.findUserByUsername.get(username);
+  if (!user) throw new Error("User does not exist.");
+  const match = await bcryptjs.compare(password, user.hash);
+  if (!match) throw new Error("Wrong Password");
+  return attachVisited(user);
 };
 
-exports.generateLeaderboard = function() {
-    return Q.promise(function(resolve, reject, notify) {
-        var leaderboard = [];
-		all()
-		.then(function(users) {
-			for (var user in users)
-				leaderboard.push({
-					"username": users[user].username,
-					"visited": users[user].visited.length
-				});
-			leaderboard.sort(function(a, b) {
-				if (b.time !== a.time)
-					return b.time - a.time;
-				return a.username > b.username;
-			});
-			leaderboard.map(function(e, i, a) {
-                if (!i) e.rank = 1;
-                else e.rank = a[i - 1].rank + (e.visited != a[i - 1].visited);
-            });
-			resolve(leaderboard);
-		})
-		.fail(function(err) {
-			reject(err);
-		});
-    });
+exports.create = async function (name, username, password, password2) {
+  if (password !== password2) throw new Error("Password mismatch.");
+  const existing = stmts.findUserByUsername.get(username);
+  if (existing) throw new Error("User already exists.");
+  const salt = await bcryptjs.genSalt(10);
+  const hash = await bcryptjs.hash(password, salt);
+  const result = stmts.insertUser.run(name, username, hash, salt, Date.now());
+  return stmts.findUserById.get(result.lastInsertRowid);
 };
 
-var get = exports.get = function(id) {
-    return Q.promise(function(resolve, reject, notify) {
-        Q.ninvoke(users, "findOne", { _id: id })
-        .then(function(user) {
-            resolve(user);
-        })
-        .fail(function(err) {
-            reject(err);
-        });
-    });
+exports.generateLeaderboard = async function () {
+  const counts = stmts.countVisitedByUser.all();
+  const countMap = {};
+  counts.forEach((c) => {
+    countMap[c.user_id] = c.count;
+  });
+
+  const leaderboard = stmts.allUsers.all().map((u) => ({
+    username: u.username,
+    visited: countMap[u.id] || 0,
+  }));
+
+  leaderboard.sort((a, b) => {
+    if (b.visited !== a.visited) return b.visited - a.visited;
+    return a.username > b.username ? 1 : -1;
+  });
+
+  leaderboard.forEach((e, i) => {
+    if (i === 0) {
+      e.rank = 1;
+    } else {
+      e.rank = leaderboard[i - 1].rank + (e.visited !== leaderboard[i - 1].visited ? 1 : 0);
+    }
+  });
+
+  return leaderboard;
 };
 
-exports.addVisited = function(userid, locationid, time) {
-    return Q.promise(function(resolve, reject, notify) {
-        Q.ninvoke(users, "findOne", { _id: userid })
-        .then(function(user) {
-            for (var entry in user.visited)
-                if (user.visited[entry].id === locationid)
-                    return resolve(); // Already marked
-            location.get(locationid)
-            .then(function(location) {
-                user.visited.push({
-                    id: locationid,
-                    name: location.name,
-                    time: time
-                });
-                return Q.ninvoke(users, "update", { _id: userid }, { $set: users });
-            });
-        })
-        .then(function() {
-            resolve();
-        })
-        .fail(function(err) {
-            reject(err);
-        });
-    });
+exports.get = async function (id) {
+  const user = stmts.findUserById.get(id);
+  if (!user) return null;
+  return attachVisited(user);
+};
+
+exports.addVisited = function (userid, locationid, time) {
+  stmts.insertVisited.run(userid, locationid, time);
 };

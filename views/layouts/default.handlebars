@@ -1,34 +1,57 @@
-<!DOCTYPE HTML>
 <html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black">
-	<title>Expeditious</title>
-	<link rel="author" type="text/plain" href="/humans.txt">
-	<ink rel="icon" href="/media/favicon.ico" type="image/ico">
-	<!--link rel="apple-touch-icon" href="/media/favicon.png" type="image/png"-->
-	<link href="/css/style.css" rel="stylesheet">
-	<link href="/css/font-awesome.min.css" rel="stylesheet">
-	<link href='http://fonts.googleapis.com/css?family=Montserrat:700|Roboto:400,700' rel='stylesheet' type='text/css'>
-</head>
-<body>
-	<header>
-		<a href="/" class="button left"><i class="fa fa-home fa-lg"></i></a>
-		<a href="/users/leaderboards" class="button leader"><i class="fa fa-trophy fa-lg"></i></a>
-		<span>EXPEDITIOUS</span>
-		<a href="/search" class="button search"><i class="fa fa-search fa-lg"></i></a>
-		{{#if user}}
-			<a href="/users/{{user._id}}" class="button right"><i class="fa fa-user fa-lg"></i></a>
-		{{else}}
-			<a href="/users/login" class="button right"><i class="fa fa-sign-in fa-lg"></i></a>
-		{{/if}}
-	</header>
-	<div class="cardbox">
-		{{{body}}}
-	</div>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="csrf-token" content="{{csrfToken}}" />
+    <title>Expeditious</title>
+    <link rel="author" type="text/plain" href="/humans.txt" />
+    <link rel="icon" href="/media/favicon.ico" type="image/ico" />
+    <!--link rel="apple-touch-icon" href="/media/favicon.png" type="image/png"-->
+    <link href="/css/style.css" rel="stylesheet" />
+    <link href="/css/font-awesome.min.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:700|Roboto:400,700"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <header>
+      <a href="/" class="button left"><i class="fa fa-home fa-lg"></i></a>
+      <a href="/users/leaderboards" class="button leader"><i class="fa fa-trophy fa-lg"></i></a>
+      <span>EXPEDITIOUS</span>
+      <a href="/search" class="button search"><i class="fa fa-search fa-lg"></i></a>
+      {{#if user}}
+        <a href="/users/{{user.id}}" class="button right"><i class="fa fa-user fa-lg"></i></a>
+      {{else}}
+        <a href="/users/login" class="button right"><i class="fa fa-sign-in fa-lg"></i></a>
+      {{/if}}
+    </header>
+    <div class="cardbox">
+      {{#if error}}
+        <div
+          class="card"
+          style="background: rgba(192,57,43,0.1); border-left: 4px solid rgba(192,57,43,1.0);"
+        >
+          <p>{{error}}</p>
+        </div>
+      {{/if}}
+      {{#if success}}
+        <div
+          class="card"
+          style="background: rgba(46,204,113,0.1); border-left: 4px solid rgba(46,204,113,1.0);"
+        >
+          <p>{{success}}</p>
+        </div>
+      {{/if}}
+      {{{body}}}
+    </div>
+  </body>
 
 </html>

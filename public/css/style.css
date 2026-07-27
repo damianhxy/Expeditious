@@ -1,315 +1,317 @@
-*{
-	font-family: 'Roboto', sans-serif;
-	box-sizing: border-box;
+* {
+  font-family: "Roboto", sans-serif;
+  box-sizing: border-box;
 }
 
 ::-moz-selection {
-    background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 ::selection {
-    background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
 }
 
-html, body{
-	margin: 0;
-	height: 100%;
-	background: #ddd;
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #ddd;
 }
 
-h1, p{
-	margin: 0;
+h1,
+p {
+  margin: 0;
 }
 
-input[type="submit"]{
-  	-webkit-appearance: none;
-  	-webkit-border-radius: 0;
+input[type="submit"] {
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
 }
 
-a{
-	color: inherit;
-	text-decoration: none;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-header{
-	width: 100%;
-	text-align: center;
-	background: rgba(192, 57, 43, 1.0);
-	color: #eee;
-	padding: 1em;
-	font-size: 1em;
-	box-shadow: 0 2px 2px rgba(0,0,0,0.2);
-	position: fixed;
-	z-index: 300;
+header {
+  width: 100%;
+  text-align: center;
+  background: rgba(192, 57, 43, 1);
+  color: #eee;
+  padding: 1em;
+  font-size: 1em;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  z-index: 300;
 }
 
-header span{
-	font-family: 'Montserrat', sans-serif;
-	font-weight: 700;
+header span {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
 }
 
-.button{
-	position: absolute;
-	top: 1em;
-	color: inherit;
+.button {
+  position: absolute;
+  top: 1em;
+  color: inherit;
 }
 
-.button.left{
-	left: 1em;
+.button.left {
+  left: 1em;
 }
 
-.button.leader{
-	left: 4em;
+.button.leader {
+  left: 4em;
 }
 
-.button.right{
-	right: 1em;
+.button.right {
+  right: 1em;
 }
 
-.button.search{
+.button.search {
   right: 4em;
 }
 
-.cardbox{
-	min-height: 100%;
-	padding: 3.5em 0 0.5em 0;
-	max-width: 600px;
-	margin: auto;
+.cardbox {
+  min-height: 100%;
+  padding: 3.5em 0 0.5em 0;
+  max-width: 600px;
+  margin: auto;
 }
 
-.card{
-	margin: 1em;
-	background: #eee;
-	padding: 1em;
-	box-shadow: 0 2px 2px rgba(0,0,0,0.2);
-	cursor: pointer;
-	transition: 0.3s;
+.card {
+  margin: 1em;
+  background: #eee;
+  padding: 1em;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.card.name{
-	position: relative;
-	margin-top: 2.5em;
-	padding-top: 13.5em;
-	text-align: center;
+.card.name {
+  position: relative;
+  margin-top: 2.5em;
+  padding-top: 13.5em;
+  text-align: center;
 }
 
-.card.name .img{
-	position: absolute;
-	top: -2em;
-	height: 15em;
-	width: 15em;
-	border-radius: 8em;
-	left: 0;
-	right: 0;
-	margin: auto;
-	border: 6px #eee solid;
-	box-shadow: 0 2px 2px rgba(0,0,0,0.2), inset 0 2px 2px rgba(0,0,0,0.2);
-	display: inline-block;
+.card.name .img {
+  position: absolute;
+  top: -2em;
+  height: 15em;
+  width: 15em;
+  border-radius: 8em;
+  left: 0;
+  right: 0;
+  margin: auto;
+  border: 6px #eee solid;
+  box-shadow:
+    0 2px 2px rgba(0, 0, 0, 0.2),
+    inset 0 2px 2px rgba(0, 0, 0, 0.2);
+  display: inline-block;
 }
 
-.card.name .stamp{
-	font-family: 'Montserrat', sans-serif;
-	font-weight: 700;
-	padding: 0 1em;
-	position: absolute;
-	top: 9.5em;
-	height: 2em;
-	width: 15em;
-	line-height: 2em;
-	left: 0;
-	right: 0;
-	margin: auto;
-	background: rgba(46, 204, 113, 1.0);
-	color: #eee;
-	box-shadow: 0 2px 2px rgba(0,0,0,0.2);
-	display: inline-block;
+.card.name .stamp {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  padding: 0 1em;
+  position: absolute;
+  top: 9.5em;
+  height: 2em;
+  width: 15em;
+  line-height: 2em;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background: rgba(46, 204, 113, 1);
+  color: #eee;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  display: inline-block;
 }
 
-.card.name .stamp.NOT{
-	background: rgba(127, 140, 141, 1.0);
+.card.name .stamp.NOT {
+  background: rgba(127, 140, 141, 1);
 }
 
-.card h1{
-	font-weight: 400;
-	margin-bottom: 0.2em;
+.card h1 {
+  font-weight: 400;
+  margin-bottom: 0.2em;
 }
 
-.card .subinfo{
-	font-size: 0.8em;
-	color: #999;
+.card .subinfo {
+  font-size: 0.8em;
+  color: #999;
 }
 
-.card .icon{
-	width: 1em;
-	display: inline-block;
-	text-align: center;
-	margin-right: 1em;
+.card .icon {
+  width: 1em;
+  display: inline-block;
+  text-align: center;
+  margin-right: 1em;
 }
 
-.card .icon.up{
-	vertical-align: top;
+.card .icon.up {
+  vertical-align: top;
 }
 
-.card .icon i{
-	color: #999;
+.card .icon i {
+  color: #999;
 }
 
-.card .icon.up i{
-	margin-top: 0.5em;
+.card .icon.up i {
+  margin-top: 0.5em;
 }
 
-.card .main{
-	width: calc(100% - 2.3em);
-	display: inline-block;
+.card .main {
+  width: calc(100% - 2.3em);
+  display: inline-block;
 }
 
-.card .img{
-	width: 100%;
-	height: 15em;
-	background: #555 no-repeat center center;
-	background-size: cover;
-	position: relative;
+.card .img {
+  width: 100%;
+  height: 15em;
+  background: #555 no-repeat center center;
+  background-size: cover;
+  position: relative;
 }
 
-.card .img span{
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	background: #eee;
-	padding: 0.2em;
-	font-size: 0.6em;
+.card .img span {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #eee;
+  padding: 0.2em;
+  font-size: 0.6em;
 }
 
-.card .title{
-	font-size: 1.3em;
+.card .title {
+  font-size: 1.3em;
 }
 
-.card .left{
-	width: 69%;
-	display: inline-block;
+.card .left {
+  width: 69%;
+  display: inline-block;
 }
 
-.card .right{
-	width: 29%;
-	display: inline-block;
-	text-align: right;
-	color: rgba(231, 76, 60, 1.0);
+.card .right {
+  width: 29%;
+  display: inline-block;
+  text-align: right;
+  color: rgba(231, 76, 60, 1);
 }
 
-.card.info{
-	text-align: justify;
+.card.info {
+  text-align: justify;
 }
 
-.card.info .content{
-	color: #666;
+.card.info .content {
+  color: #666;
 }
 
-.card.info .source{
-	text-align: right;
-	color: rgba(231, 76, 60, 1.0);
+.card.info .source {
+  text-align: right;
+  color: rgba(231, 76, 60, 1);
 }
 
-.card.map{
-	background: #555;
-	text-align: center;
-	color: #eee;
-	transition: 0.3s;
+.card.map {
+  background: #555;
+  text-align: center;
+  color: #eee;
+  transition: 0.3s;
 }
 
-.card .place{
-	padding-top:1.2em;
-	
+.card .place {
+  padding-top: 1.2em;
 }
 
-.card.input{
-	padding: 0;
+.card.input {
+  padding: 0;
 }
 
-.card.input input{
-	width: 100%;
-	font-size: 1em;
-				console.log(arr);
-	background: rgba(0,0,0,0);
-	border: 0px;
-	padding: 1em;
+.card.input input {
+  width: 100%;
+  font-size: 1em;
+  background: rgba(0, 0, 0, 0);
+  border: 0px;
+  padding: 1em;
 }
 
-.card.input input[type='submit']{
-	background: rgba(192, 57, 43, 1.0);
-	color: #eee;
-	cursor: pointer;
+.card.input input[type="submit"] {
+  background: rgba(192, 57, 43, 1);
+  color: #eee;
+  cursor: pointer;
 }
 
-.card.profile{
-	text-align: center;
+.card.profile {
+  text-align: center;
 }
 
-.card .name{
-	color: rgba(231, 76, 60, 1.0);
+.card .name {
+  color: rgba(231, 76, 60, 1);
 }
 
-.card.search{
-	padding: 0;
+.card.search {
+  padding: 0;
 }
 
-.card.search input{
-	width: calc(100% - 2.3em);
-	font-size: 1em;
-	background: rgba(0,0,0,0);
-	border: 0px;
-	padding: 1em;
+.card.search input {
+  width: calc(100% - 2.3em);
+  font-size: 1em;
+  background: rgba(0, 0, 0, 0);
+  border: 0px;
+  padding: 1em;
 }
 
-.card.search button{
-	width: 2em;
-	font-size: 1em;
-	background: rgba(0,0,0,0);
-	border: 0px;
-	text-align: center;
-	padding: 1em 0;
-	cursor: pointer;
+.card.search button {
+  width: 2em;
+  font-size: 1em;
+  background: rgba(0, 0, 0, 0);
+  border: 0px;
+  text-align: center;
+  padding: 1em 0;
+  cursor: pointer;
 }
 
-.card .nearby .fa-spin{
-	display: block;
-	width: 100%;
-	text-align: center;
-	color: #999;
-	font-size: 1.5em;
+.card .nearby .fa-spin {
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #999;
+  font-size: 1.5em;
 }
 
-.link{
-  	text-align:center;
-  	background-color: rgba(192, 57, 43, 1.0);
-  	color: #eee;
-	transition: background-color 0.5s;
+.link {
+  text-align: center;
+  background-color: rgba(192, 57, 43, 1);
+  color: #eee;
+  transition: background-color 0.5s;
 }
 
-.activitytitle{
-	font-family: 'Montserrat', sans-serif;
-	font-weight: 700;
-	font-size: 1.3em;
-	text-align: center;
-	color: #999;
+.activitytitle {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 1.3em;
+  text-align: center;
+  color: #999;
 }
 
-.floatbutton{
-	position: fixed;
-	bottom: 1em;
-	right: 1em;
-	width: 3em;
-	height: 3em;
-	line-height: 3em;
-	text-align: center;
-	border-radius: 3em;
-	background: rgba(192, 57, 43, 1.0);
-	color: #eee;
-	font-size: 1.5em;
-	box-shadow: 0 2px 2px rgba(0,0,0,0.2);
-	cursor: pointer;
-	transition:background-color 0.5s;
+.floatbutton {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  width: 3em;
+  height: 3em;
+  line-height: 3em;
+  text-align: center;
+  border-radius: 3em;
+  background: rgba(192, 57, 43, 1);
+  color: #eee;
+  font-size: 1.5em;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.5s;
 }
 
-#login{
-	transition:background-color 0.5s;
+#login {
+  transition: background-color 0.5s;
 }
