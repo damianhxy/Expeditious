@@ -2,11 +2,27 @@ const axios = require("axios");
 const settings = require("../controllers/settings.js");
 
 const placesTypes = (exports.types = [
-  "airport", "amusement_park", "aquarium", "art_gallery", "casino",
-  "church", "hindu_temple", "hospital", "library", "mosque",
-  "museum", "park", "place_of_worship", "point_of_interest",
-  "school", "shopping_mall", "stadium", "subway_station",
-  "synagogue", "university", "zoo",
+  "airport",
+  "amusement_park",
+  "aquarium",
+  "art_gallery",
+  "casino",
+  "church",
+  "hindu_temple",
+  "hospital",
+  "library",
+  "mosque",
+  "museum",
+  "park",
+  "place_of_worship",
+  "point_of_interest",
+  "school",
+  "shopping_mall",
+  "stadium",
+  "subway_station",
+  "synagogue",
+  "university",
+  "zoo",
 ]);
 
 const nearby = (exports.findNearby = async function (lat, long, radius) {

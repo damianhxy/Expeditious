@@ -16,8 +16,18 @@ const db = require("../database");
 function formatDate(date) {
   const pad = (n) => (n < 10 ? "0" + n : "" + n);
   const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
   const d = new Date(date);
   const day = d.getDate();
@@ -27,7 +37,16 @@ function formatDate(date) {
   const ampm = hours >= 12 ? "PM" : "AM";
   const h12 = hours % 12 || 12;
   return (
-    day + suffix + " " + months[d.getMonth()] + " " + pad(h12) + ":" + pad(d.getMinutes()) + " " + ampm
+    day +
+    suffix +
+    " " +
+    months[d.getMonth()] +
+    " " +
+    pad(h12) +
+    ":" +
+    pad(d.getMinutes()) +
+    " " +
+    ampm
   );
 }
 
@@ -52,26 +71,58 @@ module.exports = function (app, express) {
         for (; a < arr.length && location.types.indexOf(arr[a]) === -1; a++);
         if (a >= arr.length) return l;
         switch (arr[a]) {
-          case "airport":         l = "plane"; break;
-          case "amusement_park":  l = "space-shuttle"; break;
-          case "aquarium":        l = "anchor"; break;
-          case "art_gallery":     l = "paint-brush"; break;
-          case "casino":          l = "money"; break;
-          case "hospital":        l = "ambulance"; break;
-          case "library":         l = "book"; break;
-          case "museum":          l = "institution"; break;
-          case "park":            l = "tree"; break;
-          case "shopping_mall":   l = "building"; break;
-          case "stadium":         l = "soccer-ball-o"; break;
+          case "airport":
+            l = "plane";
+            break;
+          case "amusement_park":
+            l = "space-shuttle";
+            break;
+          case "aquarium":
+            l = "anchor";
+            break;
+          case "art_gallery":
+            l = "paint-brush";
+            break;
+          case "casino":
+            l = "money";
+            break;
+          case "hospital":
+            l = "ambulance";
+            break;
+          case "library":
+            l = "book";
+            break;
+          case "museum":
+            l = "institution";
+            break;
+          case "park":
+            l = "tree";
+            break;
+          case "shopping_mall":
+            l = "building";
+            break;
+          case "stadium":
+            l = "soccer-ball-o";
+            break;
           case "school":
-          case "university":      l = "graduation-cap"; break;
-          case "zoo":             l = "paw"; break;
-          case "mosque":          l = "moon-o"; break;
+          case "university":
+            l = "graduation-cap";
+            break;
+          case "zoo":
+            l = "paw";
+            break;
+          case "mosque":
+            l = "moon-o";
+            break;
           case "church":
           case "hindu_temple":
           case "synagogue":
-          case "place_of_worship": l = "group"; break;
-          case "subway_station":  l = "train"; break;
+          case "place_of_worship":
+            l = "group";
+            break;
+          case "subway_station":
+            l = "train";
+            break;
         }
         return l;
       },
@@ -95,7 +146,9 @@ module.exports = function (app, express) {
 
   require("console-stamp")(console, settings.TIME_FORMAT);
   morgan.token("time", () => formatDate(new Date()));
-  app.use(morgan("[:time] :method :url :status :res[content-length] - :remote-addr - :response-time ms"));
+  app.use(
+    morgan("[:time] :method :url :status :res[content-length] - :remote-addr - :response-time ms"),
+  );
 
   app.use(cookieParser(settings.SECRET));
   app.use(express.urlencoded({ extended: false }));

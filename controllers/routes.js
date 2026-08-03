@@ -17,13 +17,41 @@ router.get("/search", (req, res) => {
     title: "SEARCH",
     user: req.user,
     hot: [
-      { place_id: "ChIJvWDbfRwa2jERgNnTOpAU3-o", types: ["park"], description: "Singapore Botanic Gardens" },
-      { place_id: "ChIJnXwAOKAZ2jERAs-MHs1aDgI", types: ["shopping_mall"], description: "Clarke Quay" },
-      { place_id: "ChIJx4wPggYZ2jERnT8vOV1XU5k", types: ["shopping_mall"], description: "The Shoppes at Marina Bay Sands" },
-      { place_id: "ChIJMxZ-kwQZ2jERdsqftXeWCWI", types: ["park"], description: "Gardens by the Bay" },
-      { place_id: "ChIJKaGsJKUZ2jERxa8yhKrdPfI", types: ["library"], description: "National Library" },
-      { place_id: "ChIJQ6MVplUZ2jERn1LmNH0DlDA", types: ["amusement_park"], description: "Universal Studios Singapore" },
-      { place_id: "ChIJO9cemPUQ2jERvlh8KtwhtAc", types: ["park"], description: "Bukit Timah Nature Reserve" },
+      {
+        place_id: "ChIJvWDbfRwa2jERgNnTOpAU3-o",
+        types: ["park"],
+        description: "Singapore Botanic Gardens",
+      },
+      {
+        place_id: "ChIJnXwAOKAZ2jERAs-MHs1aDgI",
+        types: ["shopping_mall"],
+        description: "Clarke Quay",
+      },
+      {
+        place_id: "ChIJx4wPggYZ2jERnT8vOV1XU5k",
+        types: ["shopping_mall"],
+        description: "The Shoppes at Marina Bay Sands",
+      },
+      {
+        place_id: "ChIJMxZ-kwQZ2jERdsqftXeWCWI",
+        types: ["park"],
+        description: "Gardens by the Bay",
+      },
+      {
+        place_id: "ChIJKaGsJKUZ2jERxa8yhKrdPfI",
+        types: ["library"],
+        description: "National Library",
+      },
+      {
+        place_id: "ChIJQ6MVplUZ2jERn1LmNH0DlDA",
+        types: ["amusement_park"],
+        description: "Universal Studios Singapore",
+      },
+      {
+        place_id: "ChIJO9cemPUQ2jERvlh8KtwhtAc",
+        types: ["park"],
+        description: "Bukit Timah Nature Reserve",
+      },
     ],
   });
 });

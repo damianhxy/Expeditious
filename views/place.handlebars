@@ -10,7 +10,10 @@
     <div class="img" style="background: #555;"></div>
   {{/if}}
   {{#if user}}
-    <div class="stamp {{visited user.visited location.place_id}}">{{visited user.visited location.place_id}}</div>
+    <div class="stamp {{visited user.visited location.place_id}}">{{visited
+        user.visited
+        location.place_id
+      }}</div>
   {{else}}
     <div class="stamp NOT">NOT LOGGED IN</div>
   {{/if}}

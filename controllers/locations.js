@@ -87,7 +87,11 @@ router.post("/nearbyCarparks", async (req, res) => {
     return res.status(400).send("Invalid coordinates.");
   }
   try {
-    const response = await location.findNearbyCarparks(Number(req.body.lat), Number(req.body.long), 1000);
+    const response = await location.findNearbyCarparks(
+      Number(req.body.lat),
+      Number(req.body.long),
+      1000,
+    );
     response.d.forEach((e) => {
       e.Distance = distance(Number(req.body.lat), Number(req.body.long), e.Latitude, e.Longitude);
     });

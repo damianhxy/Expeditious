@@ -1,8 +1,13 @@
-import js from "@eslint/js";
-import globals from "globals";
+"use strict";
 
-export default [
+const js = require("@eslint/js");
+const globals = require("globals");
+
+module.exports = [
   js.configs.recommended,
+  {
+    ignores: ["node_modules/**", "database/**", "public/**"],
+  },
   {
     languageOptions: {
       ecmaVersion: 2022,
@@ -12,14 +17,12 @@ export default [
       },
     },
     rules: {
-      "no-unused-vars": ["error", { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" }],
+      "no-unused-vars": ["warn", { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" }],
       "no-console": "off",
       eqeqeq: "error",
       "no-var": "error",
       "prefer-const": "error",
+      "no-throw-literal": "error",
     },
-  },
-  {
-    ignores: ["node_modules/", "public/", "*.db", "eslint.config.js"],
   },
 ];

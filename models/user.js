@@ -30,7 +30,9 @@ if (!tableInfo.some((col) => col.name === "name")) {
 const PUBLIC_FIELDS = "id, name, username, preferences, joined";
 
 const stmts = {
-  insertUser: db.prepare("INSERT INTO users (name, username, hash, salt, joined) VALUES (?, ?, ?, ?, ?)"),
+  insertUser: db.prepare(
+    "INSERT INTO users (name, username, hash, salt, joined) VALUES (?, ?, ?, ?, ?)",
+  ),
   findUserByUsername: db.prepare(`SELECT ${PUBLIC_FIELDS}, hash FROM users WHERE username = ?`),
   findUserById: db.prepare(`SELECT ${PUBLIC_FIELDS} FROM users WHERE id = ?`),
   allUsers: db.prepare(`SELECT ${PUBLIC_FIELDS} FROM users`),
