@@ -44,10 +44,14 @@ router.get("/signup", (req, res) => {
   res.render("signup", { title: "SIGNUP" });
 });
 
-router.get("/logout", auth, (req, res) => {
-  req.session.success = "Successfully signed out.";
-  req.logout(() => {
-    res.redirect("/");
+router.post("/logout", auth, (req, res, next) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    req.session.destroy((destroyErr) => {
+      if (destroyErr) return next(destroyErr);
+      res.clearCookie("connect.sid", { httpOnly: true, sameSite: "lax" });
+      res.redirect("/");
+    });
   });
 });
 

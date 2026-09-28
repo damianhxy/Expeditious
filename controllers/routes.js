@@ -99,14 +99,4 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-/* 404 & 500 */
-router.use((req, res) => {
-  res.status(404).send("Not Found.");
-});
-
-router.use((err, req, res, _next) => {
-  console.error(err.stack);
-  res.status(500).send("Internal Server Error");
-});
-
 module.exports = router;
