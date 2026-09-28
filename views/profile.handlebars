@@ -16,13 +16,13 @@
 </div>
 {{/each}}
 {{#if user}}
-<a href="/users/logout">
-	<div class="card"><section class="icon">
+<form action="/users/logout" method="POST">
+	<input type="hidden" name="_csrf" value="{{csrfToken}}" />
+	<button class="card" type="submit"><section class="icon">
 		<i class="fa fa-sign-out"></i>
 	</section>
 	<section class="main">
 		Sign Out
-	</section>
-</div>
-</a>
+	</section></button>
+</form>
 {{/if}}

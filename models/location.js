@@ -91,7 +91,7 @@ exports.search = async function (str) {
       location: "1.19,103.805",
       radius: 25000,
       types: placesTypes.join("|"),
-      name: str.replace(/ /g, "+"),
+      name: str.trim(),
     },
   });
   return data;
