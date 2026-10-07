@@ -98,17 +98,23 @@ try {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         location_id TEXT NOT NULL,
+        name TEXT DEFAULT '',
         visited_at INTEGER NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         UNIQUE(user_id, location_id)
       );
     `);
 
+    const visitedColumns = db.pragma("table_info(visited)");
+    if (!visitedColumns.some((column) => column.name === "name")) {
+      db.exec("ALTER TABLE visited ADD COLUMN name TEXT DEFAULT ''");
+    }
+
     const insertUser = db.prepare(
       "INSERT INTO users (name, username, hash, salt, preferences, joined) VALUES (?, ?, ?, ?, ?, ?)",
     );
     const insertVisited = db.prepare(
-      "INSERT OR IGNORE INTO visited (user_id, location_id, visited_at) VALUES (?, ?, ?)",
+      "INSERT OR IGNORE INTO visited (user_id, location_id, name, visited_at) VALUES (?, ?, ?, ?)",
     );
 
     users.forEach((user) => {
@@ -122,7 +128,7 @@ try {
       );
       const newId = result.lastInsertRowid;
       (user.visited || []).forEach((visit) => {
-        insertVisited.run(newId, visit.id, visit.time);
+        insertVisited.run(newId, visit.id, visit.name || "", visit.time);
       });
       console.log("  Migrated", user.username, "with", (user.visited || []).length, "visits");
     });
