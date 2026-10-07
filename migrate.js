@@ -110,25 +110,45 @@ try {
       db.exec("ALTER TABLE visited ADD COLUMN name TEXT DEFAULT ''");
     }
 
+    const findUser = db.prepare("SELECT id, hash FROM users WHERE username = ?");
     const insertUser = db.prepare(
       "INSERT INTO users (name, username, hash, salt, preferences, joined) VALUES (?, ?, ?, ?, ?, ?)",
     );
-    const insertVisited = db.prepare(
-      "INSERT OR IGNORE INTO visited (user_id, location_id, name, visited_at) VALUES (?, ?, ?, ?)",
+    const updateUser = db.prepare(
+      "UPDATE users SET name = ?, salt = ?, preferences = ?, joined = ? WHERE id = ?",
     );
+    const upsertVisit = db.prepare(`
+      INSERT INTO visited (user_id, location_id, name, visited_at)
+      VALUES (?, ?, ?, ?)
+      ON CONFLICT(user_id, location_id) DO UPDATE SET
+        name = excluded.name,
+        visited_at = excluded.visited_at
+    `);
 
     users.forEach((user) => {
-      const result = insertUser.run(
-        user.name,
-        user.username,
-        user.hash,
-        user.salt,
-        serializePreferences(user.preferences),
-        user.joined,
-      );
-      const newId = result.lastInsertRowid;
+      const preferences = serializePreferences(user.preferences);
+      const existing = findUser.get(user.username);
+      let userId;
+      if (!existing) {
+        userId = insertUser.run(
+          user.name,
+          user.username,
+          user.hash,
+          user.salt,
+          preferences,
+          user.joined,
+        ).lastInsertRowid;
+      } else if (existing.hash === user.hash) {
+        // Same legacy account, imported by an earlier run: refresh it in place.
+        updateUser.run(user.name, user.salt, preferences, user.joined, existing.id);
+        userId = existing.id;
+      } else {
+        throw new Error(
+          `Username ${user.username} already belongs to a different account in ${sqlitePath}`,
+        );
+      }
       (user.visited || []).forEach((visit) => {
-        insertVisited.run(newId, visit.id, visit.name || "", visit.time);
+        upsertVisit.run(userId, visit.id, visit.name || "", visit.time);
       });
       console.log("  Migrated", user.username, "with", (user.visited || []).length, "visits");
     });
