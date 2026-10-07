@@ -155,30 +155,24 @@ window.onload = function () {
     d.innerHTML = "";
     if (lat && long) {
       document.querySelectorAll(".card .nearby")[0].innerHTML = '<i class="fa fa-cog fa-spin"></i>';
-      postAjax(
-        "/locations/nearby",
-        "lat=" +
-          lat +
-          "&long=" +
-          function (n) {
-            document.querySelectorAll(".card .nearby")[0].innerHTML = "";
-            n.results = n.results.slice(0, 5);
-            n.results.forEach(function (e) {
-              const y = document.createElement("div");
-              y.innerHTML =
-                '<a href="/locations/' +
-                escapeHtml(e.place_id) +
-                '"><section class="place"> <section class="icon"> <i class="fa fa-' +
-                escapeHtml(type(e.types)) +
-                '"></i> </section> <section class="main"> <section class="left"> <p>' +
-                escapeHtml(e.name) +
-                '</p> </section> <section class="right">' +
-                distance(lat, long, e.geometry.location.lat, e.geometry.location.lng) +
-                "m</section> </section></a>";
-              document.querySelectorAll(".card .nearby")[0].appendChild(y);
-            });
-          },
-      );
+      postAjax("/locations/nearby", "lat=" + lat + "&long=" + long, function (n) {
+        document.querySelectorAll(".card .nearby")[0].innerHTML = "";
+        n.results = n.results.slice(0, 5);
+        n.results.forEach(function (e) {
+          const y = document.createElement("div");
+          y.innerHTML =
+            '<a href="/locations/' +
+            escapeHtml(e.place_id) +
+            '"><section class="place"> <section class="icon"> <i class="fa fa-' +
+            escapeHtml(type(e.types)) +
+            '"></i> </section> <section class="main"> <section class="left"> <p>' +
+            escapeHtml(e.name) +
+            '</p> </section> <section class="right">' +
+            distance(lat, long, e.geometry.location.lat, e.geometry.location.lng) +
+            "m</section> </section></a>";
+          document.querySelectorAll(".card .nearby")[0].appendChild(y);
+        });
+      });
 
       document.querySelectorAll(".card .nearby")[1].innerHTML = '<i class="fa fa-cog fa-spin"></i>';
       postAjax("/locations/nearbyCarparks", "lat=" + lat + "&long=" + long, function (n) {

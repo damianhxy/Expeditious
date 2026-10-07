@@ -88,6 +88,15 @@ header span {
   transition: 0.3s;
 }
 
+button.card {
+  display: block;
+  width: calc(100% - 2em);
+  border: 0;
+  font-size: inherit;
+  color: inherit;
+  text-align: left;
+}
+
 .card.name {
   position: relative;
   margin-top: 2.5em;
