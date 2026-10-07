@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const Database = require("better-sqlite3");
 
-const nedbPath = path.join(__dirname, "database", "users");
-const sqlitePath = path.join(__dirname, "database", "expeditious.db");
+const nedbPath = process.env.NEDB_PATH || path.join(__dirname, "database", "users");
+const sqlitePath = process.env.DB_PATH || path.join(__dirname, "database", "expeditious.db");
 
 console.log("Reading NeDB database from", nedbPath);
 
