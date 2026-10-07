@@ -34,7 +34,7 @@ function formatDate(date) {
   const d = new Date(date);
   const day = d.getDate();
   const suffix =
-    ["th", "st", "nd", "rd"][day % 100 > 10 && day % 100 < 14 ? 0 : Math.min(day % 10, 3)] || "th";
+    day % 100 > 10 && day % 100 < 14 ? "th" : { 1: "st", 2: "nd", 3: "rd" }[day % 10] || "th";
   const hours = d.getHours();
   const ampm = hours >= 12 ? "PM" : "AM";
   const h12 = hours % 12 || 12;
