@@ -6,7 +6,9 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const SQLiteStore = require("better-sqlite3-session-store")(session);
 const { csrfSync } = require("csrf-sync");
-const csrf = csrfSync();
+const csrf = csrfSync({
+  getTokenFromRequest: (req) => req.headers["x-csrf-token"] || req.body?._csrf,
+});
 const settings = require("./settings.js");
 const userModel = require("../models/user.js");
 const location = require("../models/location.js");
