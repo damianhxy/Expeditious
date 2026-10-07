@@ -40,6 +40,14 @@ router.get("/:id", async (req, res, next) => {
   try {
     const response = await location.getPlace(req.params.id);
     const placeData = response.result;
+    if (placeData.website) {
+      try {
+        const website = new URL(placeData.website);
+        if (website.protocol !== "http:" && website.protocol !== "https:") delete placeData.website;
+      } catch (_) {
+        delete placeData.website;
+      }
+    }
     let desc = "";
     let openingHours = [];
     if (placeData.opening_hours && Array.isArray(placeData.opening_hours.weekday_text)) {
