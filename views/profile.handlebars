@@ -2,7 +2,7 @@
 	<h1>{{profile.name}}</h1>
 	<p class="subinfo"><i class="fa fa-user"></i> {{profile.username}}</p>
 	<p class="subinfo"><i class="fa fa-clock-o"></i> Joined {{profile.joined}}</p>
-	<p class="subinfo"><i class="fa fa-map-marker"></i> Visited {{length profile.visited}} places</p>
+	<p class="subinfo"><i class="fa fa-map-marker"></i> Visited {{profile.visitedCount}} places</p>
 </div>
 {{#each profile.visited}}
 <div class="card activity">

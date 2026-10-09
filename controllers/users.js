@@ -87,6 +87,7 @@ router.get("/:id", async (req, res, next) => {
     if (!usr) return res.status(404).send("User not found.");
     const now = Date.now();
     usr.joined = dayjs(usr.joined).format(settings.MOMENTJS_JOINED_FORMAT);
+    usr.visitedCount = usr.visited.length;
     usr.visited = usr.visited.filter((e) => now - e.time <= 86400000);
     usr.visited.forEach((e) => {
       e.timeFormatted = dayjs(e.time).format(settings.MOMENTJS_ACTIVITY_FORMAT);
