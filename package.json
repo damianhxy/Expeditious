@@ -4,7 +4,7 @@
   "description": "Singapore exploration app",
   "main": "index.js",
   "engines": {
-    "node": ">=22.22.2"
+    "node": ">=22.23.4"
   },
   "scripts": {
     "start": "node index.js",
